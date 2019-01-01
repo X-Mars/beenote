@@ -3,6 +3,10 @@
 ### 项目介绍
 1. 基于django rest framework + vue 的笔记软件
 2. 前端基于 https://github.com/PanJiaChen/vue-element-admin
+3. 支持**富文本**和**markdown**
+4. 仅完成了 **新建笔记** 和 **我的文件夹** 功能
+5. 近期会开放完成功能
+6. 欢迎star、watch
 
 ### 开发环境
 ```
@@ -59,5 +63,5 @@ http://ip:8000/admin
 ### 用户名密码
 ```
 用户名：admin 
-密码： mifengbiji
+密码： Admin123456
 ```
