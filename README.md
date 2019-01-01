@@ -8,6 +8,9 @@
 5. 近期会开放完成功能
 6. 欢迎star、watch
 
+### qq群
+欢迎加入beenote-笔记与知识仓库，群聊号码：702860714
+
 ### 截图展示
 
 <img src="https://github.com/X-Mars/beenote/blob/master/images/1.jpg?raw=true" width="70%" height="70%">
