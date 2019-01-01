@@ -8,6 +8,11 @@
 5. 近期会开放完成功能
 6. 欢迎star、watch
 
+### 截图展示
+
+<img src="https://github.com/X-Mars/beenote/blob/master/images/1.jpg?raw=true" width="25%" height="25%">
+<img src="https://github.com/X-Mars/beenote/blob/master/images/2.jpg?raw=true" width="25%" height="25%">
+
 ### 开发环境
 ```
 python 3.6
