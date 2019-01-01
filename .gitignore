@@ -1,0 +1,7 @@
+
+*.pyc
+beenote/bee/migrations/00*
+beenote/oauth/migrations/00*
+beenote/.idea/
+beenote/venv/
+BeeNote-Web/node_modules/*
