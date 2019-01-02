@@ -13,7 +13,7 @@
 1. **个人笔记** 和 **公司内部知识分享**
 
 ### demo
-http://beenote.huoxingxiaoliu.com   
+http://beenote.huoxingxiaoliu.com:8000   
 用户名：admin     
 密码：mifengbiji123
 
