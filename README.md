@@ -9,7 +9,7 @@
 6. 欢迎star、watch
 
 ### qq群
-欢迎加入beenote-笔记与知识仓库，群聊号码：702860714
+欢迎加入beenote-笔记与知识仓库，群聊号码：702860714         
 <img src="https://github.com/X-Mars/beenote/blob/master/images/qrcode_1546360555884.jpg?raw=true" width="40%" height="40%">
 
 ### 截图展示
@@ -43,26 +43,26 @@ python3 beenote/beenote/beenote/manage.py runserver 0.0.0.0 8000
 
 4. nginx 反向代理
 ```
-    location / {
-	root /beenote/BeeNote-Web/dist;
-	index  index.html index.htm;
-    }
+	location / {
+		root /beenote/BeeNote-Web/dist;
+		index  index.html index.htm;
+	}
 
 	location /api-v1 {
-	    proxy_pass  http://localhost:8000;
-	    proxy_redirect     off;
-	    proxy_set_header   Host             $host;
-	    proxy_set_header   X-Real-IP        $remote_addr;
-	    proxy_set_header   X-Forwarded-For  $proxy_add_x_forwarded_for;
-	    proxy_next_upstream error timeout invalid_header http_500 http_502 http_503 http_504;
-	    proxy_max_temp_file_size 0;
-	    proxy_connect_timeout      90;
-	    proxy_send_timeout         900;
-	    proxy_read_timeout         900;
-	    proxy_buffer_size          34k;
-	    proxy_buffers              4 32k;
-	    proxy_busy_buffers_size    64k;
-	    proxy_temp_file_write_size 64k;
+		proxy_pass  http://localhost:8000;
+		proxy_redirect     off;
+		proxy_set_header   Host             $host;
+		proxy_set_header   X-Real-IP        $remote_addr;
+		proxy_set_header   X-Forwarded-For  $proxy_add_x_forwarded_for;
+		proxy_next_upstream error timeout invalid_header http_500 http_502 http_503 http_504;
+		proxy_max_temp_file_size 0;
+		proxy_connect_timeout      90;
+		proxy_send_timeout         900;
+		proxy_read_timeout         900;
+		proxy_buffer_size          34k;
+		proxy_buffers              4 32k;
+		proxy_busy_buffers_size    64k;
+		proxy_temp_file_write_size 64k;
 	}
 ```
 ### 后台地址
@@ -72,5 +72,5 @@ http://ip:8000/admin
 ### 用户名密码
 ```
 用户名：admin 
-密码： Admin123456
+密码： mifengbiji
 ```
