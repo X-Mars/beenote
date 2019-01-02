@@ -10,7 +10,7 @@
 
 ### qq群
 欢迎加入beenote-笔记与知识仓库，群聊号码：702860714
-<img src="https://github.com/X-Mars/beenote/blob/master/images/qrcode_1546360555884.jpg?raw=true" width="70%" height="70%">
+<img src="https://github.com/X-Mars/beenote/blob/master/images/qrcode_1546360555884.jpg?raw=true" width="40%" height="40%">
 
 ### 截图展示
 
