@@ -33,18 +33,24 @@ django 2.1.4
 ```
 git clone https://github.com/X-Mars/beenote.git
 ```
-2. 导入数据库文件
+2. 初始化后端
+```
+pip3 install -r requirements.txt
+python3 beenote/beenote/beenote/manage.py makemigrations
+python3 beenote/beenote/beenote/manage.py migrate
+```
+
+3. 导入数据库文件
 ```
 beenote/beenote/beenote.sql
 ```
-3. 启动 django
-```
-pip3 install -r requirements.txt
 
+4. 启动项目
+```
 python3 beenote/beenote/beenote/manage.py runserver 0.0.0.0 8000
 ```
 
-4. nginx 反向代理
+5. nginx 反向代理
 ```
 	location / {
 		root /beenote/BeeNote-Web/dist;
@@ -75,5 +81,5 @@ http://ip:8000/admin
 ### 用户名密码
 ```
 用户名：admin 
-密码： mifengbiji
+密码： mifengbiji123
 ```
