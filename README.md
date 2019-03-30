@@ -89,3 +89,7 @@ http://ip:8000/admin
 用户名：admin 
 密码： mifengbiji123
 ```
+
+License
+---
+[996ICU License](LICENSE)  
