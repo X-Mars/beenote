@@ -1,4 +1,3 @@
-
 *.pyc
 beenote/bee/migrations/00*
 beenote/oauth/migrations/00*
