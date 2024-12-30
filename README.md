@@ -23,8 +23,10 @@
 
 ## 截图展示
 
-<img src="https://github.com/X-Mars/beenote/blob/master/images/1.jpg?raw=true" width="70%" height="70%">
-<img src="https://github.com/X-Mars/beenote/blob/master/images/2.jpg?raw=true" width="70%" height="70%">
+<img src="https://github.com/X-Mars/beenote/blob/master/images/1.png?raw=true" width="70%" height="70%">
+<img src="https://github.com/X-Mars/beenote/blob/master/images/2.png?raw=true" width="70%" height="70%">
+<img src="https://github.com/X-Mars/beenote/blob/master/images/1.png?raw=true" width="70%" height="70%">
+<img src="https://github.com/X-Mars/beenote/blob/master/images/2.png?raw=true" width="70%" height="70%">
 
 ## 开发环境
 
