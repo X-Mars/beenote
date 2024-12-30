@@ -27,7 +27,7 @@
 <div style="display: flex; gap: 20px;">
   <img src="https://github.com/X-Mars/beenote/blob/master/images/qrcode.jpg?raw=true" alt="QR Code" width="40%" height="40%">
   <a href="https://space.bilibili.com/439068477" target="_blank">
-    <img src="https://github.com/X-Mars/Zabbix-Alert-WeChat/blob/master/images/5.jpg?raw=true" alt="B站火星小刘" width="98.5%" height="98.5%">
+    <img src="https://github.com/X-Mars/Zabbix-Alert-WeChat/blob/master/images/5.jpg?raw=true" alt="B站火星小刘" width="53.4%" height="53.4%">
   </a>
 </div>
 
