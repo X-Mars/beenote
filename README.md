@@ -27,7 +27,7 @@
 
 ## qq群
 
-欢迎加入beenote-笔记与知识仓库，群聊号码：**702860714**  
+欢迎加入beenote-笔记与知识仓库，群聊号码：[523870446](<a target="_blank" href="https://qm.qq.com/cgi-bin/qm/qr?k=a_y5qjuIfBYZHkhGg4JTZqGjTk3KUI5T&jump_from=webapi&authKey=qJpb8UQWFJcxKBdT/zq9kGBqiMxOm9k3TkfYeAtaVtHAbKbIfxMiGBolmP+aWa5b"><img border="0" src="//pub.idqqimg.com/wpa/images/group.png" alt="vue+django+zabbix+grafana" title="vue+django+zabbix+grafana"></a>)
 
 <div style="display: flex; gap: 20px;">
   <img src="https://github.com/X-Mars/beenote/blob/master/images/qrcode.jpg?raw=true" alt="QR Code" width="40%" height="40%">
