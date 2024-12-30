@@ -11,6 +11,7 @@ from django.db.models import Count
 from django.utils import timezone
 from datetime import timedelta, date
 from django.db.models.functions import TruncDate, TruncMonth
+from django.db.models import Q
 
 class StandardResultsSetPagination(PageNumberPagination):
     page_size = 10
@@ -22,10 +23,22 @@ class NoteGroupViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        return NoteGroup.objects.filter(creator=self.request.user)
+        user = self.request.user
+        
+        # 管理员可以看到所有分组
+        if user.role == 'admin':
+            return NoteGroup.objects.all()
+        
+        # 普通用户只能看到自己创建的和被授权的分组
+        return NoteGroup.objects.filter(
+            Q(creator=user) |  # 用户创建的分组
+            Q(note_group_users=user)  # 用户被授权的分组
+        ).distinct()
 
     def perform_create(self, serializer):
-        serializer.save(creator=self.request.user)
+        # 创建分组时，同时添加到用户的授权分组中
+        group = serializer.save(creator=self.request.user)
+        self.request.user.note_group.add(group)
 
 
 class NoteViewSet(viewsets.ModelViewSet):
@@ -41,23 +54,54 @@ class NoteViewSet(viewsets.ModelViewSet):
     ]
 
     def get_queryset(self):
-        queryset = Note.objects.filter(creator=self.request.user)
+        user = self.request.user
+        
+        # 如果是管理员，返回所有笔记
+        if user.role == 'admin':
+            return Note.objects.all()
+        
+        # 构建查询条件
+        queryset = Note.objects.filter(
+            Q(creator=user) |  # 用户创建的笔记
+            Q(note_users=user) |  # 用户被直接授权的笔记
+            Q(group__note_group_users=user)  # 用户被授权的分组中的笔记
+        ).distinct()
+        
+        # 应用分组过滤
         group_id = self.request.query_params.get('group_id', None)
         if group_id is not None:
             queryset = queryset.filter(group_id=group_id)
+            
         return queryset
 
     def perform_create(self, serializer):
-        serializer.save(creator=self.request.user)
+        # 创建笔记时，同时添加到用户的授权笔记中
+        note = serializer.save(creator=self.request.user)
+        self.request.user.note.add(note)
 
     @action(detail=False, methods=['get'])
     def stats(self, request):
+        user = request.user
         time_range = request.query_params.get('range', 'week')
         today = timezone.now().date()
         
+        # 根据用户角色获取笔记查询集
+        if user.role == 'admin':
+            notes_queryset = Note.objects.all()
+            groups_queryset = NoteGroup.objects.all()
+        else:
+            notes_queryset = Note.objects.filter(
+                Q(creator=user) |
+                Q(note_users=user)
+            ).distinct()
+            groups_queryset = NoteGroup.objects.filter(
+                Q(creator=user) |
+                Q(note_group_users=user)
+            ).distinct()
+        
         # 获取基础统计数据
-        total_notes = Note.objects.filter(creator=request.user).count()
-        total_groups = NoteGroup.objects.filter(creator=request.user).count()
+        total_notes = notes_queryset.count()
+        total_groups = groups_queryset.count()
         
         # 获取分组分布数据
         groups_distribution = (

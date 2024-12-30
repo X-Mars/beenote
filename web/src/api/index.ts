@@ -1,5 +1,5 @@
 import request from './request'
-import type { Note, Group } from './types'
+import type { Note, Group, User } from './types'
 
 export const login = (data: { username: string; password: string }) => {
   return request.post('/auth/login/', data)
@@ -43,4 +43,40 @@ export const getNoteStats = (params?: { range?: string }) => {
 
 export const getActiveUsers = () => {
   return request.get('/auth/stats/')
+}
+
+export const getNote = (id: number) => {
+  return request.get<Note>(`/notes/${id}/`)
+}
+
+export const getUsers = () => {
+  return request.get<User[]>('/auth/users/')
+}
+
+export const createUser = (data: Partial<User>) => {
+  return request.post<User>('/auth/users/', data)
+}
+
+export const updateUser = (id: number, data: Partial<User>) => {
+  return request.patch<User>(`/auth/users/${id}/`, data)
+}
+
+export const deleteUser = (id: number) => {
+  return request.delete(`/auth/users/${id}/`)
+}
+
+export const getAuthGroups = () => {
+  return request.get<Group[]>('/auth/groups/')
+}
+
+export const createAuthGroup = (data: Partial<Group>) => {
+  return request.post<Group>('/auth/groups/', data)
+}
+
+export const updateAuthGroup = (id: number, data: Partial<Group>) => {
+  return request.patch<Group>(`/auth/groups/${id}/`, data)
+}
+
+export const deleteAuthGroup = (id: number) => {
+  return request.delete(`/auth/groups/${id}/`)
 } 

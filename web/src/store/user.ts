@@ -1,46 +1,64 @@
 import { defineStore } from 'pinia'
-import { ref } from 'vue'
-import type { User } from '@/types'
+import type { User } from '@/api/types'
 import request from '@/api/request'
 
-export const useUserStore = defineStore('user', () => {
-  const user = ref<User | null>(null)
-  const token = ref<string | null>(null)
+export const useUserStore = defineStore('user', {
+  state: () => ({
+    user: null as User | null,
+    token: localStorage.getItem('token'),
+    initialized: false
+  }),
+  
+  getters: {
+    isAdmin: (state) => state.user?.role === 'admin',
+    isLoggedIn: (state) => !!state.token
+  },
+  
+  actions: {
+    setUser(user: User) {
+      this.user = user
+    },
+    
+    setToken(token: string) {
+      this.token = token
+      localStorage.setItem('token', token)
+    },
+    
+    clearUser() {
+      this.user = null
+      this.token = null
+      localStorage.removeItem('token')
+      localStorage.removeItem('user')
+    },
 
-  // 获取用户信息
-  const fetchUserInfo = async () => {
-    try {
-      const res = await request.get('/auth/me/')
-      user.value = res.data
-    } catch (error) {
-      console.error('获取用户信息失败:', error)
+    async fetchUserInfo() {
+      try {
+        const res = await request.get('/auth/me/')
+        this.user = res.data
+        localStorage.setItem('user', JSON.stringify(res.data))
+      } catch (error) {
+        console.error('获取用户信息失败:', error)
+        this.clearUser()
+        throw error
+      }
+    },
+
+    logout() {
+      this.clearUser()
+    },
+
+    async initialize() {
+      if (this.token && !this.initialized) {
+        try {
+          await this.fetchUserInfo()
+        } catch (error) {
+          console.error('初始化用户信息失败:', error)
+        } finally {
+          this.initialized = true
+        }
+      } else {
+        this.initialized = true
+      }
     }
-  }
-
-  // 设置用户信息
-  const setUser = (userInfo: User) => {
-    user.value = userInfo
-  }
-
-  // 设置 token
-  const setToken = (newToken: string) => {
-    token.value = newToken
-    localStorage.setItem('token', newToken)
-  }
-
-  // 退出登录
-  const logout = () => {
-    user.value = null
-    token.value = null
-    localStorage.removeItem('token')
-  }
-
-  return {
-    user,
-    token,
-    setUser,
-    setToken,
-    logout,
-    fetchUserInfo
   }
 }) 

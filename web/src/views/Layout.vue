@@ -15,18 +15,47 @@
             mode="horizontal"
             class="horizontal-menu"
           >
-            <el-menu-item index="/">
-              <el-icon><DataLine /></el-icon>
-              <span>仪表盘</span>
-            </el-menu-item>
-            <el-menu-item index="/notes">
-              <el-icon><Document /></el-icon>
-              <span>笔记管理</span>
-            </el-menu-item>
-            <el-menu-item index="/groups">
-              <el-icon><FolderOpened /></el-icon>
-              <span>分组管理</span>
-            </el-menu-item>
+            <template v-for="item in filteredMenuItems" :key="item.path">
+              <el-sub-menu 
+                v-if="getVisibleChildren(item).length > 1"
+                :index="item.path"
+              >
+                <template #title>
+                  <el-icon>
+                    <component :is="item.meta?.icon" v-if="item.meta?.icon" />
+                  </el-icon>
+                  <span>{{ item.meta?.title }}</span>
+                </template>
+                <el-menu-item 
+                  v-for="child in getVisibleChildren(item)"
+                  :key="child.path"
+                  :index="child.path"
+                >
+                  <el-icon>
+                    <component :is="child.meta?.icon" v-if="child.meta?.icon" />
+                  </el-icon>
+                  <span>{{ child.meta?.title }}</span>
+                </el-menu-item>
+              </el-sub-menu>
+              <el-menu-item 
+                v-else 
+                :index="getVisibleChildren(item).length === 1 ? getVisibleChildren(item)[0].path : item.path"
+              >
+                <el-icon>
+                  <component 
+                    :is="getVisibleChildren(item).length === 1 
+                      ? getVisibleChildren(item)[0].meta?.icon 
+                      : item.meta?.icon" 
+                    v-if="getVisibleChildren(item).length === 1 
+                      ? getVisibleChildren(item)[0].meta?.icon 
+                      : item.meta?.icon"
+                  />
+                </el-icon>
+                <span>{{ getVisibleChildren(item).length === 1 
+                  ? getVisibleChildren(item)[0].meta?.title 
+                  : item.meta?.title }}</span>
+              </el-menu-item>
+            </template>
           </el-menu>
 
           <div class="header-right">
@@ -72,18 +101,39 @@
           :default-active="route.path"
           class="menu"
         >
-          <el-menu-item index="/">
-            <el-icon><DataLine /></el-icon>
-            <span>仪表盘</span>
-          </el-menu-item>
-          <el-menu-item index="/notes">
-            <el-icon><Document /></el-icon>
-            <span>笔记管理</span>
-          </el-menu-item>
-          <el-menu-item index="/groups">
-            <el-icon><FolderOpened /></el-icon>
-            <span>分组管理</span>
-          </el-menu-item>
+          <template v-for="item in filteredMenuItems" :key="item.path">
+            <el-sub-menu 
+              v-if="getVisibleChildren(item).length > 1"
+              :index="item.path"
+            >
+              <template #title>
+                <el-icon><component :is="item.meta?.icon" /></el-icon>
+                <span>{{ item.meta?.title }}</span>
+              </template>
+              <el-menu-item 
+                v-for="child in getVisibleChildren(item)"
+                :key="child.path"
+                :index="child.path"
+              >
+                <el-icon><component :is="child.meta?.icon" /></el-icon>
+                <span>{{ child.meta?.title }}</span>
+              </el-menu-item>
+            </el-sub-menu>
+            <el-menu-item 
+              v-else 
+              :index="getVisibleChildren(item).length === 1 ? getVisibleChildren(item)[0].path : item.path"
+            >
+              <el-icon>
+                <component :is="getVisibleChildren(item).length === 1 
+                  ? getVisibleChildren(item)[0].meta?.icon 
+                  : item.meta?.icon" 
+                />
+              </el-icon>
+              <span>{{ getVisibleChildren(item).length === 1 
+                ? getVisibleChildren(item)[0].meta?.title 
+                : item.meta?.title }}</span>
+            </el-menu-item>
+          </template>
         </el-menu>
       </el-aside>
       
@@ -126,24 +176,31 @@
 import { ref, computed, watch, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useUserStore } from '@/store/user'
-import { 
-  DataLine, 
-  Document, 
-  FolderOpened, 
-  ArrowDown,
-  Expand,
-  Fold,
-  SwitchButton
-} from '@element-plus/icons-vue'
 
 const route = useRoute()
 const router = useRouter()
 const userStore = useUserStore()
-const layoutMode = ref(localStorage.getItem('layoutMode') || 'vertical')
+const layoutMode = ref(localStorage.getItem('layoutMode') || 'horizontal')
 
-// 在组件挂载时获取用户信息
-onMounted(async () => {
-  await userStore.fetchUserInfo()
+// 获取可见的子路由
+const getVisibleChildren = (route: RouteRecordRaw) => {
+  return (route.children || []).filter(child => !child.meta?.hidden)
+}
+
+// 根据用户角色过滤菜单
+const filteredMenuItems = computed(() => {
+  // 获取根路由的子路由（排除登录页）
+  const menuRoutes = router.options.routes.filter(route => 
+    route.path !== '/login' && route.children
+  )
+  
+  // 过滤需要权限的路由
+  return menuRoutes.filter(route => {
+    if (route.meta?.roles) {
+      return route.meta.roles.includes(userStore.user?.role || '')
+    }
+    return true
+  })
 })
 
 // 监听布局模式变化并保存到本地存储
@@ -159,6 +216,24 @@ const handleCommand = (command: string) => {
     layoutMode.value = layoutMode.value === 'vertical' ? 'horizontal' : 'vertical'
   }
 }
+
+// 获取用户信息
+const fetchUserInfo = async () => {
+  try {
+    await userStore.initialize()
+  } catch (error) {
+    console.error('获取用户信息失败:', error)
+    userStore.clearUser()
+    router.push('/login')
+  }
+}
+
+// 在组件挂载时获取用户信息
+onMounted(() => {
+  if (userStore.token) {
+    fetchUserInfo()
+  }
+})
 </script>
 
 <style scoped>

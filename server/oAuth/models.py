@@ -1,5 +1,6 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+from note.models import Note, NoteGroup
 
 
 class User(AbstractUser):
@@ -24,6 +25,20 @@ class User(AbstractUser):
         help_text='Specific permissions for this user.',
         related_name='oauth_user_set',
         related_query_name='oauth_user'
+    )
+
+    note = models.ManyToManyField(
+        Note,
+        related_name='note_users',
+        verbose_name='授权笔记',
+        blank=True,
+    )
+
+    note_group = models.ManyToManyField(
+        NoteGroup,
+        related_name='note_group_users',
+        verbose_name='授权笔记分组',
+        blank=True,
     )
 
     class Meta:

@@ -112,9 +112,11 @@ const handleLogin = async () => {
       loading.value = true
       try {
         const res = await request.post('/auth/login/', loginForm)
-        console.log(res)
         userStore.setToken(res.data.access)
-        userStore.setUser(res.data.user)
+        
+        const userRes = await request.get('/auth/me/')
+        userStore.setUser(userRes.data)
+        localStorage.setItem('user', JSON.stringify(userRes.data))
         
         if (rememberMe.value) {
           localStorage.setItem('username', loginForm.username)

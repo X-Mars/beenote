@@ -18,5 +18,15 @@ export interface Group {
 export interface User {
   id: number
   username: string
+  name?: string
+  first_name: string
+  last_name: string
+  email: string
   role: string
+  is_active: boolean
+  last_active_at: string
+  date_joined: string
+  notes?: number[]
+  note_group?: number[]
+  statusLoading?: boolean
 } 

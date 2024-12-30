@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from .models import Note, NoteGroup
+from oAuth.serializers import UserSerializer
 
 class NoteGroupSerializer(serializers.ModelSerializer):
     note_count = serializers.SerializerMethodField()
@@ -22,10 +23,12 @@ class NoteGroupSerializer(serializers.ModelSerializer):
 
 class NoteSerializer(serializers.ModelSerializer):
     group_detail = NoteGroupSerializer(source='group', read_only=True)
+    creator = UserSerializer(read_only=True)
     created_at = serializers.DateTimeField(format='%Y-%m-%d %H:%M:%S', read_only=True)
     updated_at = serializers.DateTimeField(format='%Y-%m-%d %H:%M:%S', read_only=True)
     
     class Meta:
         model = Note
-        fields = ['id', 'title', 'content', 'group', 'group_detail', 'created_at', 'updated_at']
+        fields = ['id', 'title', 'content', 'group', 'group_detail', 
+                 'creator', 'created_at', 'updated_at']
         read_only_fields = ['created_at', 'updated_at'] 
