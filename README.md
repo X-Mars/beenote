@@ -25,8 +25,8 @@
 
 <img src="https://github.com/X-Mars/beenote/blob/master/images/1.png?raw=true" width="70%" height="70%">
 <img src="https://github.com/X-Mars/beenote/blob/master/images/2.png?raw=true" width="70%" height="70%">
-<img src="https://github.com/X-Mars/beenote/blob/master/images/1.png?raw=true" width="70%" height="70%">
-<img src="https://github.com/X-Mars/beenote/blob/master/images/2.png?raw=true" width="70%" height="70%">
+<img src="https://github.com/X-Mars/beenote/blob/master/images/3.png?raw=true" width="70%" height="70%">
+<img src="https://github.com/X-Mars/beenote/blob/master/images/4.png?raw=true" width="70%" height="70%">
 
 ## 开发环境
 
