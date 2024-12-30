@@ -31,7 +31,9 @@
 <a target="_blank" href="https://qm.qq.com/cgi-bin/qm/qr?k=a_y5qjuIfBYZHkhGg4JTZqGjTk3KUI5T&jump_from=webapi&authKey=qJpb8UQWFJcxKBdT/zq9kGBqiMxOm9k3TkfYeAtaVtHAbKbIfxMiGBolmP+aWa5b"><img border="0" src="https://pub.idqqimg.com/wpa/images/group.png" alt="vue+django+zabbix+grafana" title="vue+django+zabbix+grafana"></a>
 
 <div style="display: flex; gap: 20px;">
-  <img src="https://github.com/X-Mars/beenote/blob/master/images/qrcode.jpg?raw=true" alt="QR Code" width="40%" height="40%">
+  <a href="https://qm.qq.com/cgi-bin/qm/qr?k=a_y5qjuIfBYZHkhGg4JTZqGjTk3KUI5T&jump_from=webapi&authKey=qJpb8UQWFJcxKBdT/zq9kGBqiMxOm9k3TkfYeAtaVtHAbKbIfxMiGBolmP+aWa5b" target="_blank">
+    <img src="https://github.com/X-Mars/beenote/blob/master/images/qrcode.jpg?raw=true" alt="QR Code" width="40%" height="40%">
+  </a>
   <a href="https://space.bilibili.com/439068477" target="_blank">
     <img src="https://github.com/X-Mars/Zabbix-Alert-WeChat/blob/master/images/5.jpg?raw=true" alt="B站火星小刘" width="53.4%" height="53.4%">
   </a>
