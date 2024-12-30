@@ -10,16 +10,16 @@
 
 1. **个人笔记** 和 **公司内部知识分享**
 
-## demo
+## demo（待上线）
 
 <http://beenote.huoxingxiaoliu.com:8000>
 用户名：admin
-密码：mifengbiji123
+密码：mifengbiji
 
 ## qq群
 
-欢迎加入beenote-笔记与知识仓库，群聊号码：702860714
-<img src="https://github.com/X-Mars/beenote/blob/master/images/qrcode_1546360555884.jpg?raw=true" width="40%" height="40%">
+欢迎加入beenote-笔记与知识仓库，群聊号码：**702860714**  
+<img src="https://github.com/X-Mars/beenote/blob/master/images/qrcode.jpg?raw=true" width="40%" height="40%">
 
 ## 截图展示
 
