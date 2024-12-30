@@ -24,8 +24,12 @@
 
 欢迎加入beenote-笔记与知识仓库，群聊号码：**702860714**  
 
-![QR Code](https://github.com/X-Mars/beenote/blob/master/images/qrcode.jpg?raw=true)
-[![B站火星小刘](https://github.com/X-Mars/Zabbix-Alert-WeChat/blob/master/images/5.jpg?raw=true)](https://space.bilibili.com/439068477)
+<div style="display: flex; gap: 20px;">
+  <img src="https://github.com/X-Mars/beenote/blob/master/images/qrcode.jpg?raw=true" alt="QR Code" width="40%" height="40%">
+  <a href="https://space.bilibili.com/439068477" target="_blank">
+    <img src="https://github.com/X-Mars/Zabbix-Alert-WeChat/blob/master/images/5.jpg?raw=true" alt="B站火星小刘" width="98.5%" height="98.5%">
+  </a>
+</div>
 
 ## 截图展示
 
