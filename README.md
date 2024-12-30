@@ -1,9 +1,9 @@
-# 密封笔记 beenote
+# 蜜蜂🐝笔记 beenote
 
 ## 项目介绍
 
 1. 基于vue3 + django rest framework 的**markdown**笔记软件
-2. 由cursor协助开发
+2. 由**cursor**协助开发
 3. 近期将进行频繁更新，欢迎star、watch
 
 ## 项目定位
