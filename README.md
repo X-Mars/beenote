@@ -17,7 +17,7 @@
 
 ## demo（待上线）
 
-<http://beenote.huoxingxiaoliu.com:8000>  
+<http://beenote.huoxingxiaoliu.com>  
 用户名：admin  
 密码：mifengbiji  
 
