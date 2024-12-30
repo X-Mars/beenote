@@ -16,37 +16,44 @@
 用户名：admin
 密码：mifengbiji
 
+## 跟着火星小刘学运维开发
+
+<https://space.bilibili.com/439068477>
+
 ## qq群
 
 欢迎加入beenote-笔记与知识仓库，群聊号码：**702860714**  
-<img src="https://github.com/X-Mars/beenote/blob/master/images/qrcode.jpg?raw=true" width="40%" height="40%">
+
+![QR Code](https://github.com/X-Mars/beenote/blob/master/images/qrcode.jpg?raw=true)
+[![B站火星小刘](https://github.com/X-Mars/Zabbix-Alert-WeChat/blob/master/images/5.jpg?raw=true)](https://space.bilibili.com/439068477)
 
 ## 截图展示
 
-<img src="https://github.com/X-Mars/beenote/blob/master/images/1.png?raw=true" width="70%" height="70%">
-<img src="https://github.com/X-Mars/beenote/blob/master/images/2.png?raw=true" width="70%" height="70%">
-<img src="https://github.com/X-Mars/beenote/blob/master/images/3.png?raw=true" width="70%" height="70%">
-<img src="https://github.com/X-Mars/beenote/blob/master/images/4.png?raw=true" width="70%" height="70%">
+![登录页](https://github.com/X-Mars/beenote/blob/master/images/1.png?raw=true)
+![仪表盘](https://github.com/X-Mars/beenote/blob/master/images/2.png?raw=true)
+![笔记管理](https://github.com/X-Mars/beenote/blob/master/images/3.png?raw=true)
+![笔记授权](https://github.com/X-Mars/beenote/blob/master/images/4.png?raw=true)
 
 ## 开发环境
 
-```
+```shell
 python 3.12
 sqlite
 django 5.1.4
+node v22.12.0
 ```
 
 ## 部署安装
 
 1. 拉取代码
 
-```
+```shell
 git clone https://github.com/X-Mars/beenote.git
 ```
 
 2. 初始化后端
 
-```
+```shell
 cd beenote/server
 pip3 install -r requirements.txt
 python3 manage.py makemigrations
@@ -55,13 +62,13 @@ python3 manage.py migrate
 
 3. 启动项目
 
-```
+```shell
 python3 manage.py runserver
 ```
 
-5. nginx 反向代理
+4. nginx 反向代理
 
-```
+```conf
 location / {
   root /beenote/web/dist;
   index  index.html index.htm;
@@ -87,17 +94,17 @@ location /api {
 
 ## 后台地址
 
-```
+```url
 <http://ip:8000/admin>
 ```
 
 ## 默认用户名密码
 
-```
+```conf
 用户名：admin 
 密码： mifengbiji
 ```
 
-License
----
+## License
+
 [996ICU License](LICENSE)  
