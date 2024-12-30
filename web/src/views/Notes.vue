@@ -276,24 +276,16 @@ const tableRowClassName = ({ row }: { row: Note }) => {
 const fetchNotes = async () => {
   loading.value = true
   try {
-    const params: Record<string, any> = {
+    const res = await getNotes({
       page: currentPage.value,
-      page_size: pageSize.value
-    }
-    
-    if (currentGroup.value) {
-      params.group__id = currentGroup.value
-    }
-    
-    if (searchKey.value) {
-      params.search = searchKey.value
-    }
-    
-    const res = await getNotes(params)
+      page_size: pageSize.value,
+      group__id: currentGroup.value || undefined
+    })
     notes.value = res.data.results
     total.value = res.data.count
   } catch (error) {
     console.error(error)
+    ElMessage.error('获取笔记列表失败')
   } finally {
     loading.value = false
   }

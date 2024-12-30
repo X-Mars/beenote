@@ -170,7 +170,7 @@
 import { ref, onMounted, reactive } from 'vue'
 import { Plus, Edit, Delete, Key } from '@element-plus/icons-vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import type { FormInstance } from 'element-plus'
+import type { FormInstance, FormRules } from 'element-plus'
 import { getUsers, createUser, updateUser, deleteUser, getNotes, getGroups } from '@/api'
 import type { User } from '@/api/types'
 
@@ -191,7 +191,7 @@ const form = reactive({
   is_active: true
 })
 
-const rules = {
+const rules: FormRules = {
   username: [{ required: true, message: '请输入用户名' }],
   email: [{ type: 'email', message: '请输入正确的邮箱地址' }]
 }

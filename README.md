@@ -1,14 +1,10 @@
-# beenote
+# 密封笔记 beenote
 
 ## 项目介绍
 
-1. 基于django rest framework + vue 的笔记软件
-2. 前端基于 https://github.com/PanJiaChen/vue-element-admin
-3. 支持 **富文本** 和 **markdown**
-4. 仅完成了 **新建笔记** 和 **我的文件夹** 功能
-5. 近期会开放完成功能
-6. 本版本为 **公测版本** ，部署未经严格测试
-7. 欢迎star、watch
+1. 基于vue3 + django rest framework 的**markdown**笔记软件
+2. 由cursor协助开发
+3. 近期将进行频繁更新，欢迎star、watch
 
 ## 项目定位
 
@@ -33,9 +29,9 @@
 ## 开发环境
 
 ```
-python 3.6
-mysql 5.7.24
-django 2.1.4
+python 3.12
+sqlite
+django 5.1.4
 ```
 
 ## 部署安装
@@ -49,21 +45,16 @@ git clone https://github.com/X-Mars/beenote.git
 2. 初始化后端
 
 ```
+cd beenote/server
 pip3 install -r requirements.txt
-python3 beenote/beenote/beenote/manage.py makemigrations
-python3 beenote/beenote/beenote/manage.py migrate
+python3 manage.py makemigrations
+python3 manage.py migrate
 ```
 
-3. 导入数据库文件
+3. 启动项目
 
 ```
-beenote/beenote/beenote.sql
-```
-
-4. 启动项目
-
-```
-python3 beenote/beenote/beenote/manage.py runserver 0.0.0.0 8000
+python3 manage.py runserver
 ```
 
 5. nginx 反向代理
@@ -74,7 +65,7 @@ location / {
   index  index.html index.htm;
 }
 
-location /api-v1 {
+location /api {
   proxy_pass  http://localhost:8000;
   proxy_redirect     off;
   proxy_set_header   Host             $host;
@@ -98,11 +89,11 @@ location /api-v1 {
 <http://ip:8000/admin>
 ```
 
-## 用户名密码
+## 默认用户名密码
 
 ```
 用户名：admin 
-密码： mifengbiji123
+密码： mifengbiji
 ```
 
 License

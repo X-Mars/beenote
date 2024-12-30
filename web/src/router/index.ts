@@ -1,5 +1,5 @@
-import { createRouter, createWebHistory } from 'vue-router'
-import type { RouteRecordRaw } from 'vue-router'
+import { createRouter, createWebHistory } from 'vue-router/auto'
+import type { RouteRecordRaw, NavigationGuardNext, RouteLocationNormalized } from 'vue-router/auto'
 import { useUserStore } from '@/store/user'
 import { 
   DataLine, 
@@ -149,7 +149,11 @@ const router = createRouter({
 })
 
 // 路由守卫
-router.beforeEach(async (to, from, next) => {
+router.beforeEach(async (
+  to: RouteLocationNormalized,
+  from: RouteLocationNormalized,
+  next: NavigationGuardNext
+) => {
   const userStore = useUserStore()
   const token = localStorage.getItem('token')
 

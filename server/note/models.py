@@ -8,9 +8,11 @@ class NoteGroup(models.Model):
     updated_at = models.DateTimeField('更新时间', auto_now=True)
     creator = models.ForeignKey(
         settings.AUTH_USER_MODEL,
-        on_delete=models.CASCADE,
+        on_delete=models.SET_NULL,
         related_name='created_groups',
-        verbose_name='创建者'
+        verbose_name='创建者',
+        blank=True,
+        null=True
     )
 
     class Meta:
@@ -33,9 +35,11 @@ class Note(models.Model):
     )
     creator = models.ForeignKey(
         settings.AUTH_USER_MODEL,
-        on_delete=models.CASCADE,
+        on_delete=models.SET_NULL,
         related_name='notes',
-        verbose_name='创建者'
+        verbose_name='创建者',
+        blank=True,
+        null=True
     )
     created_at = models.DateTimeField('创建时间', auto_now_add=True)
     updated_at = models.DateTimeField('更新时间', auto_now=True)
