@@ -68,7 +68,7 @@ const markdownToolbars = [
 ]
 
 // 获取笔记详情
-const fetchNote = async (id: number) => {
+const fetchNote = async (id: string) => {
   try {
     const res = await getNote(id)
     note.value = res.data
@@ -100,10 +100,10 @@ const handleSave = async () => {
 
   saving.value = true
   try {
-    let noteId: number
+    let noteId: string
     if (route.params.id) {
-      await updateNote(Number(route.params.id), note.value)
-      noteId = Number(route.params.id)
+      await updateNote(route.params.id, note.value)
+      noteId = route.params.id
       ElMessage.success('更新成功')
     } else {
       const res = await createNote(note.value)
@@ -122,7 +122,7 @@ const handleSave = async () => {
 onMounted(async () => {
   await fetchGroups()
   if (route.params.id) {
-    await fetchNote(Number(route.params.id))
+    await fetchNote(route.params.id)
   }
 })
 </script>
