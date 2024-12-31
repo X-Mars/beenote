@@ -595,11 +595,4 @@ onMounted(() => {
   padding: 0;
   height: auto;
 }
-
-/* 添加笔记标题按钮样式 */
-.el-table :deep(.el-button) {
-  padding: 0;
-  height: auto;
-  font-weight: normal;
-}
 </style>
