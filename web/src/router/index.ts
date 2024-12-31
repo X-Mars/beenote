@@ -130,15 +130,15 @@ const routes: Array<RouteRecordRaw> = [
           icon: User
         }
       },
-      {
-        path: '/auth/groups',
-        name: 'AuthGroups',
-        component: () => import('@/views/auth/Groups.vue'),
-        meta: {
-          title: '分组管理',
-          icon: FolderOpened
-        }
-      }
+      // {
+      //   path: '/auth/groups',
+      //   name: 'AuthGroups',
+      //   component: () => import('@/views/auth/Groups.vue'),
+      //   meta: {
+      //     title: '分组管理',
+      //     icon: FolderOpened
+      //   }
+      // }
     ]
   }
 ]

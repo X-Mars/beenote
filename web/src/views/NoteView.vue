@@ -1,26 +1,39 @@
 <template>
   <div class="note-view-container">
-    <div class="header">
-      <div class="title-row">
-        <h1 class="title">{{ note.title }}</h1>
-        <el-button type="primary" @click="handleEdit">编辑文章</el-button>
+    <el-skeleton :loading="loading" animated>
+      <template #template>
+        <div class="header">
+          <el-skeleton-item variant="h1" style="width: 50%" />
+          <div class="meta">
+            <el-skeleton-item variant="text" style="width: 100px" />
+          </div>
+        </div>
+        <el-skeleton-item variant="p" style="height: 400px" />
+      </template>
+      <template #default>
+      <div class="header">
+        <div class="title-row">
+          <h1 class="title">{{ note?.title }}</h1>
+          <el-button type="primary" @click="handleEdit">编辑文章</el-button>
+        </div>
+        <div class="meta">
+          <el-tag size="small" v-if="note?.group_detail">
+            {{ note.group_detail.name }}
+          </el-tag>
+          <span class="time">更新于 {{ formatTime(note?.updated_at || '') }}</span>
+        </div>
       </div>
-      <div class="meta">
-        <el-tag size="small" v-if="note.group_detail">
-          {{ note.group_detail.name }}
-        </el-tag>
-        <span class="time">更新于 {{ formatTime(note.updated_at || '') }}</span>
+      <div class="content">
+        <MdPreview :modelValue="note?.content || ''" />
       </div>
-    </div>
-    <div class="content">
-      <MdPreview :modelValue="note.content || ''" />
-    </div>
+      </template>
+    </el-skeleton>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
+import { ref, onMounted, watchEffect } from 'vue'
+import { useRoute, useRouter, onBeforeRouteUpdate } from 'vue-router'
 import { ElMessage } from 'element-plus'
 import { MdPreview } from 'md-editor-v3'
 import 'md-editor-v3/lib/style.css'
@@ -30,19 +43,24 @@ import dayjs from 'dayjs'
 
 const route = useRoute()
 const router = useRouter()
-const note = ref<Partial<Note>>({})
+const note = ref<Note | null>(null)
+const loading = ref(false)
 
 const formatTime = (time: string) => {
-  return dayjs(time).format('YYYY-MM-DD HH:mm:ss')
+  return time ? dayjs(time).format('YYYY-MM-DD HH:mm:ss') : ''
 }
 
 const fetchNote = async (id: number) => {
+  loading.value = true
   try {
     const res = await getNote(id)
     note.value = res.data
   } catch (error) {
-    console.error(error)
+    console.error('获取笔记失败:', error)
     ElMessage.error('获取笔记失败')
+    router.push('/notes')
+  } finally {
+    loading.value = false
   }
 }
 
@@ -50,9 +68,15 @@ const handleEdit = () => {
   router.push(`/notes/edit/${route.params.id}`)
 }
 
-onMounted(() => {
+onBeforeRouteUpdate(async (to) => {
+  if (to.params.id) {
+    await fetchNote(Number(to.params.id))
+  }
+})
+
+watchEffect(async () => {
   if (route.params.id) {
-    fetchNote(Number(route.params.id))
+    await fetchNote(Number(route.params.id))
   }
 })
 </script>
@@ -108,5 +132,14 @@ onMounted(() => {
 :deep(.md-preview) {
   background-color: #fff;
   padding: 0;
+}
+
+/* 骨架屏样式 */
+:deep(.el-skeleton__h1) {
+  height: 36px !important;
+}
+
+:deep(.el-skeleton__text) {
+  margin-top: 16px;
 }
 </style> 
