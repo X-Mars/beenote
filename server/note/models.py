@@ -1,8 +1,10 @@
+import uuid
 from django.db import models
 from django.conf import settings
 
 
 class NoteGroup(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField('名称', max_length=100, unique=True)
     description = models.TextField('描述', blank=True, null=True)
     created_at = models.DateTimeField('创建时间', auto_now_add=True)
@@ -27,6 +29,7 @@ class NoteGroup(models.Model):
 
 
 class Note(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     title = models.CharField('标题', max_length=200)
     content = models.TextField('内容')
     group = models.ForeignKey(

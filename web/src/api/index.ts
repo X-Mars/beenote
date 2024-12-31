@@ -13,11 +13,11 @@ export const createNote = (data: Partial<Note>) => {
   return request.post<Note>('/notes/', data)
 }
 
-export const updateNote = (id: number, data: Partial<Note>) => {
+export const updateNote = (id: string, data: Partial<Note>) => {
   return request.patch<Note>(`/notes/${id}/`, data)
 }
 
-export const deleteNote = (id: number) => {
+export const deleteNote = (id: string) => {
   return request.delete(`/notes/${id}/`)
 }
 
@@ -29,11 +29,11 @@ export const createGroup = (data: Partial<Group>) => {
   return request.post<Group>('/groups/', data)
 }
 
-export const updateGroup = (id: number, data: Partial<Group>) => {
+export const updateGroup = (id: string, data: Partial<Group>) => {
   return request.patch<Group>(`/groups/${id}/`, data)
 }
 
-export const deleteGroup = (id: number) => {
+export const deleteGroup = (id: string) => {
   return request.delete(`/groups/${id}/`)
 }
 
@@ -45,7 +45,7 @@ export const getActiveUsers = () => {
   return request.get('/auth/stats/')
 }
 
-export const getNote = (id: number) => {
+export const getNote = (id: string) => {
   return request.get<Note>(`/notes/${id}/`)
 }
 
@@ -57,11 +57,11 @@ export const createUser = (data: Partial<User>) => {
   return request.post<User>('/auth/users/', data)
 }
 
-export const updateUser = (id: number, data: Partial<User>) => {
+export const updateUser = (id: string, data: Partial<User>) => {
   return request.patch<User>(`/auth/users/${id}/`, data)
 }
 
-export const deleteUser = (id: number) => {
+export const deleteUser = (id: string) => {
   return request.delete(`/auth/users/${id}/`)
 }
 
@@ -73,10 +73,10 @@ export const createAuthGroup = (data: Partial<Group>) => {
   return request.post<Group>('/auth/groups/', data)
 }
 
-export const updateAuthGroup = (id: number, data: Partial<Group>) => {
+export const updateAuthGroup = (id: string, data: Partial<Group>) => {
   return request.patch<Group>(`/auth/groups/${id}/`, data)
 }
 
-export const deleteAuthGroup = (id: number) => {
+export const deleteAuthGroup = (id: string) => {
   return request.delete(`/auth/groups/${id}/`)
 } 

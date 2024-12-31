@@ -50,7 +50,7 @@ const formatTime = (time: string) => {
   return time ? dayjs(time).format('YYYY-MM-DD HH:mm:ss') : ''
 }
 
-const fetchNote = async (id: number) => {
+const fetchNote = async (id: string) => {
   loading.value = true
   try {
     const res = await getNote(id)
@@ -70,13 +70,13 @@ const handleEdit = () => {
 
 onBeforeRouteUpdate(async (to) => {
   if (to.params.id) {
-    await fetchNote(Number(to.params.id))
+    await fetchNote(to.params.id as string)
   }
 })
 
 watchEffect(async () => {
   if (route.params.id) {
-    await fetchNote(Number(route.params.id))
+    await fetchNote(route.params.id)
   }
 })
 </script>

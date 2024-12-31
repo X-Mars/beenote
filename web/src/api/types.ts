@@ -10,19 +10,19 @@ export interface PaginatedResponse<T> {
 }
 
 export interface Note {
-  id: number
+  id: string
   title: string
   content: string
-  group: number | null
+  group: string | null
   created_at: string
   updated_at: string
   creator?: {
-    id: number
+    id: string
     username: string
     name: string
   }
   group_detail?: {
-    id: number
+    id: string
     name: string
   }
 }
@@ -33,9 +33,9 @@ export interface NoteResponse {
 }
 
 export interface User {
-  id: number
+  id: string
   username: string
-  name?: string
+  name: string
   first_name: string
   last_name: string
   email: string
@@ -43,20 +43,20 @@ export interface User {
   is_active: boolean
   last_active_at: string
   date_joined: string
-  notes?: number[]
-  note_group?: number[]
+  notes?: string[]
+  note_group?: string[]
   statusLoading?: boolean
 }
 
 export interface Group {
-  id: number
+  id: string
   name: string
   description?: string
   created_at: string
   updated_at: string
   note_count?: number
   creator?: {
-    id: number
+    id: string
     username: string
     name: string
   }

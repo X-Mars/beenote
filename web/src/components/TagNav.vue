@@ -46,7 +46,7 @@ const addView = async (route: any) => {
     let title = meta.title as string
     if (route.name === 'NoteView' && params.id) {
       try {
-        const res = await getNote(Number(params.id))
+        const res = await getNote(params.id)
         title = res.data.title
       } catch (error) {
         console.error('获取笔记标题失败:', error)
