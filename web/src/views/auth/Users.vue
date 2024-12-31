@@ -27,6 +27,7 @@
             :loading="row.statusLoading"
             @change="handleStatusChange(row)"
             :active-text="row.is_active ? '启用' : '禁用'"
+            :disabled="row.username === userStore.user?.username"
             inline-prompt
           />
         </template>
@@ -331,6 +332,13 @@ const formatDateTime = (dateStr: string) => {
 
 // 处理状态切换
 const handleStatusChange = async (user: User & { statusLoading?: boolean }) => {
+  // 禁止用户禁用自己的账号
+  if (user.username === userStore.user?.username && !user.is_active) {
+    ElMessage.warning('不能禁用自己的账号')
+    user.is_active = true
+    return
+  }
+
   user.statusLoading = true
   try {
     await updateUser(user.id, { is_active: user.is_active })
