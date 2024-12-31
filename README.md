@@ -17,9 +17,9 @@
 
 ## demo（待上线）
 
-<http://beenote.huoxingxiaoliu.com:8000>
-用户名：admin
-密码：mifengbiji
+<http://beenote.huoxingxiaoliu.com>  
+用户名：admin  
+密码：mifengbiji  
 
 ## 跟着火星小刘学运维开发
 
