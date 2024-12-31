@@ -63,6 +63,7 @@
             <el-button 
               type="danger" 
               :icon="Delete"
+              :disabled="row.username === userStore.user?.username"
               @click="handleDelete(row)"
             >
               删除
@@ -96,7 +97,10 @@
           <el-input 
             v-model="form.password" 
             type="password"
-            :placeholder="currentUser ? '不修改请留空' : '请输入密码'"
+            :disabled="currentUser?.username === userStore.user?.username"
+            :placeholder="currentUser?.username === userStore.user?.username ? 
+              '不能修改自己的密码' : 
+              (currentUser ? '不修改请留空' : '请输入密码')"
           />
         </el-form-item>
         <el-form-item label="姓" prop="first_name">
@@ -269,7 +273,7 @@ const handleSubmit = async (formEl?: FormInstance | null) => {
           is_active: form.is_active
         }
         
-        if (form.password.trim()) {
+        if (form.password.trim() && currentUser?.username !== userStore.user?.username) {
           data.password = form.password
         }
         
@@ -294,6 +298,11 @@ const handleSubmit = async (formEl?: FormInstance | null) => {
 }
 
 const handleDelete = async (user: User) => {
+  if (user.username === userStore.user?.username) {
+    ElMessage.warning('不能删除自己的账号')
+    return
+  }
+
   try {
     await ElMessageBox.confirm(
       '确定要删除该用户吗？此操作不可恢复',
