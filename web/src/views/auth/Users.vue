@@ -52,6 +52,7 @@
               编辑
             </el-button>
             <el-button 
+              v-if="showAuthButton"
               type="success" 
               :icon="Key"
               @click="handleAuth(row)"
@@ -71,16 +72,15 @@
     </el-table>
 
     <el-dialog
-      :title="currentUser ? '编辑用户' : '新建用户'"
       v-model="dialogVisible"
+      :title="currentUser ? '编辑用户' : '新建用户'"
       width="500px"
-      @close="resetForm"
     >
       <el-form
+        ref="formRef"
         :model="form"
         :rules="rules"
-        ref="formRef"
-        label-width="80px"
+        label-width="100px"
       >
         <el-form-item label="用户名" prop="username">
           <el-input v-model="form.username" />
@@ -88,9 +88,15 @@
         <el-form-item 
           label="密码" 
           prop="password"
-          :rules="currentUser ? [] : [{ required: true, message: '请输入密码' }]"
+          :rules="[
+            { required: !currentUser, message: '请输入密码' }
+          ]"
         >
-          <el-input v-model="form.password" type="password" />
+          <el-input 
+            v-model="form.password" 
+            type="password"
+            :placeholder="currentUser ? '不修改请留空' : '请输入密码'"
+          />
         </el-form-item>
         <el-form-item label="姓" prop="first_name">
           <el-input v-model="form.first_name" />
@@ -113,7 +119,7 @@
       </el-form>
       <template #footer>
         <el-button @click="dialogVisible = false">取消</el-button>
-        <el-button type="primary" @click="handleSubmit" :loading="submitting">
+        <el-button type="primary" @click="handleSubmit(formRef)" :loading="submitting">
           确定
         </el-button>
       </template>
@@ -167,12 +173,13 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, reactive } from 'vue'
+import { ref, computed, onMounted, reactive } from 'vue'
 import { Plus, Edit, Delete, Key } from '@element-plus/icons-vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import type { FormInstance, FormRules } from 'element-plus'
 import { getUsers, createUser, updateUser, deleteUser, getNotes, getGroups } from '@/api'
 import type { User } from '@/api/types'
+import { useUserStore } from '@/store/user'
 
 const users = ref<User[]>([])
 const loading = ref(false)
@@ -233,35 +240,48 @@ const handleAdd = () => {
 
 const handleEdit = (user: User) => {
   currentUser.value = user
-  form.username = user.username
-  form.password = ''
-  form.first_name = user.first_name
-  form.last_name = user.last_name
-  form.email = user.email
-  form.role = user.role
-  form.is_active = user.is_active
+  Object.assign(form, {
+    username: user.username,
+    password: '',
+    first_name: user.first_name,
+    last_name: user.last_name,
+    email: user.email,
+    role: user.role,
+    is_active: user.is_active
+  })
   dialogVisible.value = true
 }
 
-const handleSubmit = async () => {
-  if (!formRef.value) return
+const handleSubmit = async (formEl?: FormInstance | null) => {
+  if (!formEl) return
   
-  await formRef.value.validate(async (valid) => {
+  await formEl.validate(async (valid) => {
     if (valid) {
       submitting.value = true
       try {
-        const data = { ...form }
+        const data: Record<string, any> = {
+          username: form.username,
+          first_name: form.first_name,
+          last_name: form.last_name,
+          email: form.email,
+          role: form.role,
+          is_active: form.is_active
+        }
+        
+        if (form.password.trim()) {
+          data.password = form.password
+        }
+        
         if (currentUser.value) {
-          if (!data.password) {
-            delete data.password
-          }
           await updateUser(currentUser.value.id, data)
+          ElMessage.success('更新成功')
         } else {
           await createUser(data)
+          ElMessage.success('创建成功')
         }
-        ElMessage.success('保存成功')
+        
         dialogVisible.value = false
-        fetchUsers()
+        await fetchUsers()
       } catch (error) {
         console.error(error)
         ElMessage.error('保存失败')
@@ -414,6 +434,10 @@ const handleGroupAuthChange = async (group: any) => {
     group.hasAuth = !group.hasAuth
   }
 }
+
+const userStore = useUserStore()
+
+const showAuthButton = computed(() => userStore.user?.role === 'admin')
 
 onMounted(() => {
   fetchUsers()

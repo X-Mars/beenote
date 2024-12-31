@@ -83,7 +83,9 @@
           </div>
         </div>
       </el-header>
-      
+      <div class="sub-header">
+        <tag-nav />
+      </div>
       <el-main>
         <router-view />
       </el-main>
@@ -162,6 +164,7 @@
               </template>
             </el-dropdown>
           </div>
+          <tag-nav />
         </el-header>
         
         <el-main>
@@ -176,6 +179,7 @@
 import { ref, computed, watch, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useUserStore } from '@/store/user'
+import TagNav from '@/components/TagNav.vue'
 
 const route = useRoute()
 const router = useRouter()
@@ -250,11 +254,23 @@ onMounted(() => {
   padding: 0;
   background-color: #fff;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+  height: 60px !important;
+}
+
+/* 顶部导航模式下的标签导航容器 */
+.sub-header {
+  position: fixed;
+  top: 60px;
+  left: 0;
+  right: 0;
+  z-index: 999;
+  background-color: #fff;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
 }
 
 /* 顶部导航模式下，为内容区域添加上边距，避免被固定头部遮挡 */
 .layout-container:has(.horizontal-header) .el-main {
-  padding-top: 80px;
+  padding-top: 110px;  /* 增加内容区域的上边距，为标签导航留出空间 */
 }
 
 .el-aside {
@@ -272,11 +288,9 @@ onMounted(() => {
 }
 
 .el-header {
-  background-color: #fff;
-  /* border-bottom: 1px solid #dcdfe6; */
+  height: auto !important;
   padding: 0;
-  display: flex;
-  justify-content: flex-end;
+  background-color: #fff;
 }
 
 .header-content {
@@ -315,10 +329,12 @@ onMounted(() => {
 }
 
 .header-right {
+  padding: 0 20px;
+  height: 48px;
   display: flex;
+  justify-content: flex-end;
   align-items: center;
-  padding-right: 20px;
-  height: 100%;
+  border-bottom: 1px solid var(--el-border-color-light);
 }
 
 .user-dropdown {
@@ -385,5 +401,22 @@ onMounted(() => {
 /* 调整侧边栏菜单的上边距，与logo对齐 */
 .el-aside .el-menu {
   margin-top: 0;
+}
+
+/* 侧边栏模式下的 header 样式 */
+.el-container:not(:has(.horizontal-header)) .el-header {
+  height: auto !important;
+  padding: 0;
+  background-color: #fff;
+}
+
+/* 调整标签导航样式 */
+:deep(.tag-nav) {
+  border-bottom: 1px solid var(--el-border-color-light);
+}
+
+/* 确保内容区域不被遮挡 */
+.el-main {
+  padding-top: 8px;
 }
 </style> 

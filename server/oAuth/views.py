@@ -128,12 +128,13 @@ class UserViewSet(viewsets.ModelViewSet):
         return queryset
 
     def perform_create(self, serializer):
-        # 创建用户时加密密码
-        password = serializer.validated_data.get('password')
-        if password:
-            serializer.validated_data['password'] = make_password(password)
         # 保存用户
         user = serializer.save()
+
+        # 更新用户时加密密码
+        password = serializer.validated_data.get('password')
+        if password:
+            user.set_password(password)
         
         # 创建用户的默认笔记分组
         group_name = user.get_full_name()
@@ -146,6 +147,14 @@ class UserViewSet(viewsets.ModelViewSet):
         )
     
     def perform_update(self, serializer):
+        # 先保存一份请求数据的副本
+        note_ids = None
+        group_ids = None
+        if 'note' in self.request.data or 'note_group' in self.request.data:
+            self.check_admin()
+            note_ids = self.request.data.get('note', [])
+            group_ids = self.request.data.get('note_group', [])
+
         # 如果请求包含笔记或分组授权数据，检查管理员权限
         if 'note' in self.request.data or 'note_group' in self.request.data:
             self.check_admin()
@@ -153,14 +162,14 @@ class UserViewSet(viewsets.ModelViewSet):
         # 获取请求数据中的笔记和分组ID列表
         note_ids = self.request.data.get('note', [])
         group_ids = self.request.data.get('note_group', [])
-        
-        # 更新用户时加密密码
-        password = serializer.validated_data.get('password')
-        if password:
-            serializer.validated_data['password'] = make_password(password)
             
         # 保存用户基本信息
         user = serializer.save()
+
+        # 更新用户时加密密码
+        password = serializer.validated_data.get('password')
+        if password:
+            user.set_password(password)
         
         # 更新笔记授权关系
         if note_ids is not None:
