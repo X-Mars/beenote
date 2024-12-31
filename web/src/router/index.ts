@@ -87,7 +87,10 @@ const routes: Array<RouteRecordRaw> = [
           title: '查看笔记',
           icon: View,
           hidden: true  // 在导航菜单中隐藏
-        }
+        },
+        props: route => ({
+          id: route.params.id as string
+        })
       }
     ]
   },
