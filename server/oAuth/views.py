@@ -106,7 +106,7 @@ class UserViewSet(viewsets.ModelViewSet):
     """
     用户管理视图集
     """
-    queryset = User.objects.all().order_by('-date_joined')
+    queryset = User.objects.filter(is_superuser=False).order_by('-date_joined')
     serializer_class = UserSerializer
     permission_classes = [IsAdminUser]
     
