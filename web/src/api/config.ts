@@ -24,6 +24,12 @@ export interface DingTalkConfig extends OAuthConfig {
   app_id: string
 }
 
+export interface GitHubConfig extends OAuthConfig {
+  client_id: string
+  client_secret: string
+  redirect_uri: string
+}
+
 export const configApi = {
   // 企业微信配置
   getWeComConfigs: () => request.get<WeComConfig[]>('/auth/wecom-config/'),
@@ -44,5 +50,12 @@ export const configApi = {
   createDingTalkConfig: (data: Partial<DingTalkConfig>) => request.post<DingTalkConfig>('/auth/dingtalk-config/', data),
   updateDingTalkConfig: (id: string, data: Partial<DingTalkConfig>) => request.patch<DingTalkConfig>(`/auth/dingtalk-config/${id}/`, data),
   deleteDingTalkConfig: (id: string) => request.delete(`/auth/dingtalk-config/${id}/`),
-  getCurrentDingTalkConfig: () => request.get<DingTalkConfig>('/auth/dingtalk-config/current/')
+  getCurrentDingTalkConfig: () => request.get<DingTalkConfig>('/auth/dingtalk-config/current/'),
+
+  // GitHub配置
+  getGitHubConfigs: () => request.get<GitHubConfig[]>('/auth/github-config/'),
+  createGitHubConfig: (data: Partial<GitHubConfig>) => request.post<GitHubConfig>('/auth/github-config/', data),
+  updateGitHubConfig: (id: string, data: Partial<GitHubConfig>) => request.patch<GitHubConfig>(`/auth/github-config/${id}/`, data),
+  deleteGitHubConfig: (id: string) => request.delete(`/auth/github-config/${id}/`),
+  getCurrentGitHubConfig: () => request.get<GitHubConfig>('/auth/github-config/current/')
 } 

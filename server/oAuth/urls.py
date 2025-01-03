@@ -2,7 +2,8 @@ from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from .views import (
     LoginView, UserInfoView, UserViewSet, GroupViewSet,
-    WeComConfigViewSet, FeiShuConfigViewSet, DingTalkConfigViewSet
+    WeComConfigViewSet, FeiShuConfigViewSet, DingTalkConfigViewSet,
+    GitHubConfigViewSet
 )
 from .utils import WeComLoginView, FeiShuLoginView, DingTalkLoginView, LoginQRCodeView, GitHubLoginView
 from rest_framework_simplejwt.views import TokenRefreshView
@@ -15,6 +16,7 @@ router.register(r'groups', GroupViewSet)
 router.register(r'wecom-config', WeComConfigViewSet)
 router.register(r'feishu-config', FeiShuConfigViewSet)
 router.register(r'dingtalk-config', DingTalkConfigViewSet)
+router.register(r'github-config', GitHubConfigViewSet)
 
 urlpatterns = [
     # 包含路由器生成的URL

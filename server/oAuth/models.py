@@ -3,6 +3,30 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 from note.models import Note, NoteGroup
 from django.utils import timezone
+from django.core.exceptions import ValidationError
+import re
+
+
+def validate_password_strength(password):
+    """
+    验证密码强度
+    要求：
+    1. 长度至少6位
+    2. 包含大写字母
+    3. 包含小写字母
+    4. 包含数字
+    """
+    if len(password) < 6:
+        raise ValidationError('密码长度至少为6位')
+    
+    if not re.search(r'[A-Z]', password):
+        raise ValidationError('密码必须包含大写字母')
+    
+    if not re.search(r'[a-z]', password):
+        raise ValidationError('密码必须包含小写字母')
+    
+    if not re.search(r'\d', password):
+        raise ValidationError('密码必须包含数字')
 
 
 class User(AbstractUser):
@@ -49,6 +73,11 @@ class User(AbstractUser):
         verbose_name='授权分组',
         blank=True,
     )
+
+    def save(self, *args, **kwargs):
+        if self._state.adding and self.password:  # 只在创建新用户时验证密码
+            validate_password_strength(self.password)
+        super().save(*args, **kwargs)
 
     class Meta:
         verbose_name = '用户'
@@ -231,14 +260,16 @@ class GitHubUser(models.Model):
         'User',
         on_delete=models.CASCADE,
         related_name='github_user',
-        verbose_name='关联用户'
+        verbose_name='关联用户',
+        null=True, blank=True
     )
     github_id = models.CharField('GitHub ID', max_length=100, unique=True)
     login = models.CharField('GitHub用户名', max_length=100)
     name = models.CharField('GitHub昵称', max_length=100, null=True, blank=True)
     email = models.EmailField('GitHub邮箱', null=True, blank=True)
     avatar_url = models.URLField('头像URL', null=True, blank=True)
-    access_token = models.CharField('访问令牌', max_length=100)
+    bio = models.TextField('个人简介', null=True, blank=True)
+    location = models.CharField('所在地', max_length=100, null=True, blank=True)
     created_at = models.DateTimeField('创建时间', auto_now_add=True)
     updated_at = models.DateTimeField('更新时间', auto_now=True)
 
