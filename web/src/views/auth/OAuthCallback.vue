@@ -43,7 +43,8 @@ const platformName = computed(() => {
   const stateMap: { [key: string]: string } = {
     'wecom': '企业微信',
     'feishu': '飞书',
-    'dingtalk': '钉钉'
+    'dingtalk': '钉钉',
+    'github': 'GitHub'
   }
   return stateMap[route.query.state as string] || '未知平台'
 })
@@ -60,8 +61,7 @@ const handleLogin = async () => {
     console.log('authCode:', authCode)
     console.log('state:', state)
 
-
-    if (!code || !state || (!authCode && state === 'dingtalk')) {
+    if (!code || !state || (!authCode && state === 'dingtalk' && state !== 'github')) {
       throw new Error('缺少必要的参数')
     }
 
@@ -75,6 +75,9 @@ const handleLogin = async () => {
         break
       case 'dingtalk':
         response = await userStore.dingtalkLogin(authCode as string)
+        break
+      case 'github':
+        response = await userStore.githubLogin(code as string)
         break
       default:
         throw new Error('未知的登录类型')

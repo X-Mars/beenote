@@ -204,3 +204,47 @@ class DingTalkUser(models.Model):
 
     def __str__(self):
         return f'钉钉用户 - {self.name or self.user.username}'
+
+
+class GitHubConfig(models.Model):
+    """GitHub OAuth配置"""
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    client_id = models.CharField('Client ID', max_length=100)
+    client_secret = models.CharField('Client Secret', max_length=100)
+    redirect_uri = models.URLField('回调域名', max_length=500, null=True, blank=True)
+    enabled = models.BooleanField('是否启用', default=True)
+    created_at = models.DateTimeField('创建时间', auto_now_add=True)
+    updated_at = models.DateTimeField('更新时间', auto_now=True)
+
+    class Meta:
+        verbose_name = 'GitHub配置'
+        verbose_name_plural = verbose_name
+
+    def __str__(self):
+        return f'GitHub配置 - {self.client_id}'
+
+
+class GitHubUser(models.Model):
+    """GitHub用户信息"""
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    user = models.OneToOneField(
+        'User',
+        on_delete=models.CASCADE,
+        related_name='github_user',
+        verbose_name='关联用户'
+    )
+    github_id = models.CharField('GitHub ID', max_length=100, unique=True)
+    login = models.CharField('GitHub用户名', max_length=100)
+    name = models.CharField('GitHub昵称', max_length=100, null=True, blank=True)
+    email = models.EmailField('GitHub邮箱', null=True, blank=True)
+    avatar_url = models.URLField('头像URL', null=True, blank=True)
+    access_token = models.CharField('访问令牌', max_length=100)
+    created_at = models.DateTimeField('创建时间', auto_now_add=True)
+    updated_at = models.DateTimeField('更新时间', auto_now=True)
+
+    class Meta:
+        verbose_name = 'GitHub用户'
+        verbose_name_plural = verbose_name
+
+    def __str__(self):
+        return f'GitHub用户 - {self.name or self.login}'

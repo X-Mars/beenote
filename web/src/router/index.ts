@@ -154,6 +154,15 @@ const routes: Array<RouteRecordRaw> = [
     }
   },
   {
+    path: '/oauth/github/callback',
+    name: 'GitHubCallback',
+    component: () => import('@/views/auth/GitHubCallback.vue'),
+    meta: {
+      title: 'GitHub登录回调',
+      requiresAuth: false
+    }
+  },
+  {
     path: '/system/oauth',
     name: 'System',
     component: () => import('@/views/Layout.vue'),

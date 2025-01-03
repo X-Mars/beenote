@@ -116,5 +116,17 @@ export const useUserStore = defineStore('user', {
         throw error
       }
     },
+
+    async githubLogin(code: string) {
+      try {
+        const response = await userApi.githubLogin(code)
+        this.setToken(response.data.access)
+        this.setRefreshToken(response.data.refresh)
+        this.setUser(response.data.user)
+        return response
+      } catch (error) {
+        throw error
+      }
+    },
   }
 }) 

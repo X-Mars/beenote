@@ -10,10 +10,12 @@ from .wecom import WeComLoginView
 from .feishu import FeiShuLoginView
 from .dingtalk import DingTalkLoginView
 from .qrcode import LoginQRCodeView
+from .github import GitHubLoginView
 
 __all__ = [
     'WeComLoginView', 
     'FeiShuLoginView', 
     'DingTalkLoginView',
-    'LoginQRCodeView'
+    'LoginQRCodeView',
+    'GitHubLoginView'
 ]
