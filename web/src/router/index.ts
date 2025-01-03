@@ -8,7 +8,7 @@ import {
   Edit,
   View,
   User,
-  FolderOpened,
+  Setting,
   Notebook
 } from '@element-plus/icons-vue'
 import type { Component } from 'vue'
@@ -121,7 +121,7 @@ const routes: Array<RouteRecordRaw> = [
     meta: { 
       title: '权限管理',
       icon: Lock,
-      roles: ['admin']
+      roles: ['admin', 'superuser']
     },
     children: [
       {
@@ -142,6 +142,36 @@ const routes: Array<RouteRecordRaw> = [
       //     icon: FolderOpened
       //   }
       // }
+    ]
+  },
+  {
+    path: '/oauth/callback',
+    name: 'OAuthCallback',
+    component: () => import('@/views/auth/OAuthCallback.vue'),
+    meta: {
+      title: '第三方登录',
+      requiresAuth: false
+    }
+  },
+  {
+    path: '/system/oauth',
+    name: 'System',
+    component: () => import('@/views/Layout.vue'),
+    meta: {
+      title: '系统管理',
+      requiresAuth: true,
+      roles: ['superuser']
+    },
+    children: [
+      {
+        path: '/system/oauth',
+        name: 'SystemOAuth',
+        component: () => import('@/views/auth/OAuthConfig.vue'),
+        meta: {
+          title: '第三方登录配置',
+          icon: Setting
+        }
+      }
     ]
   }
 ]

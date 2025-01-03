@@ -61,9 +61,7 @@
           <div class="header-right">
             <el-dropdown @command="handleCommand">
               <span class="user-dropdown">
-                <el-avatar :size="32" class="avatar">
-                  {{ (userStore.user?.name || userStore.user?.username)?.charAt(0).toUpperCase() }}
-                </el-avatar>
+                <el-avatar :size="32" :src="userStore.user?.avatar || '/src/assets/logo.png'" />
                 <span class="username">{{ userStore.user?.name || userStore.user?.username }}</span>
                 <el-icon><ArrowDown /></el-icon>
               </span>
@@ -144,9 +142,7 @@
           <div class="header-right">
             <el-dropdown @command="handleCommand">
               <span class="user-dropdown">
-                <el-avatar :size="32" class="avatar">
-                  {{ (userStore.user?.name || userStore.user?.username)?.charAt(0).toUpperCase() }}
-                </el-avatar>
+                <el-avatar :size="32" :src="userStore.user?.avatar || '/src/assets/logo.png'" />
                 <span class="username">{{ userStore.user?.name || userStore.user?.username }}</span>
                 <el-icon><ArrowDown /></el-icon>
               </span>
@@ -334,7 +330,6 @@ onMounted(() => {
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  border-bottom: 1px solid var(--el-border-color-light);
 }
 
 .user-dropdown {

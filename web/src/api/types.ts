@@ -46,6 +46,7 @@ export interface User {
   notes?: string[]
   note_group?: string[]
   statusLoading?: boolean
+  avatar?: string
 }
 
 export interface Group {

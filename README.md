@@ -10,10 +10,11 @@
 ## 功能定位
 
 1. **个人笔记** 和 **公司内部知识分享**
-2. 用户分为**普通用户**与**管理员用户**两种角色
+2. 用户分为**普通用户**、**管理员用户**、**超级管理员**三种角色
 3. 用户角色可以创建**笔记和笔记分组**
 4. 管理员可以看到全部用户的笔记和笔记分组，并可以为其他用户分配**笔记和笔记分组**权限
-5. 用户只可以看到管理员授权的**笔记和笔记分组**
+5. 超级管理员可以配置第三方登录
+6. 用户只可以看到管理员授权的**笔记和笔记分组**
 
 ## demo（待上线）
 
@@ -45,6 +46,7 @@
 ![仪表盘](https://github.com/X-Mars/beenote/blob/master/images/2.png?raw=true)
 ![笔记管理](https://github.com/X-Mars/beenote/blob/master/images/3.png?raw=true)
 ![笔记授权](https://github.com/X-Mars/beenote/blob/master/images/4.png?raw=true)
+![三方登录](https://github.com/X-Mars/beenote/blob/master/images/5.png?raw=true)
 
 ## 开发环境
 

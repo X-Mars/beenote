@@ -45,7 +45,7 @@
         >
           <template #default="{ row }">
             <el-button
-              text
+              link
               style="color: #E6A23C;"
               @click="showNotes(row)"
             >
@@ -62,6 +62,7 @@
                 type="primary" 
                 :icon="Edit"
                 @click="handleEdit(row)"
+                :disabled="!canEdit(row)"
               >
                 编辑
               </el-button>
@@ -78,6 +79,7 @@
                 type="danger" 
                 :icon="Delete"
                 @click="handleDelete(row)"
+                :disabled="!canEdit(row)"
               >
                 删除
               </el-button>
@@ -103,12 +105,17 @@
             <div class="group-header">
               <span class="title">{{ group.name }}</span>
               <el-dropdown trigger="click">
-                <el-button type="text">
+                <el-button
+                  link
+                >
                   <el-icon><More /></el-icon>
                 </el-button>
                 <template #dropdown>
                   <el-dropdown-menu>
-                    <el-dropdown-item @click="handleEdit(group)">
+                    <el-dropdown-item 
+                      @click="handleEdit(group)"
+                      :disabled="!canEdit(group)"
+                    >
                       <el-icon><Edit /></el-icon>编辑
                     </el-dropdown-item>
                     <el-dropdown-item 
@@ -119,6 +126,7 @@
                     </el-dropdown-item>
                     <el-dropdown-item 
                       @click="handleDelete(group)"
+                      :disabled="!canEdit(group)"
                       class="danger"
                     >
                       <el-icon><Delete /></el-icon>删除
@@ -132,7 +140,7 @@
             </div>
             <div class="group-footer">
               <el-button
-                text
+                link
                 style="color: #E6A23C;"
                 @click="showNotes(group)"
               >
@@ -218,7 +226,7 @@
         <el-table-column prop="title" label="笔记名称">
           <template #default="{ row }">
             <el-button
-              text
+              link
               style="color: #E6A23C;"
               @click="navigateToNote(row)"
             >
@@ -289,7 +297,7 @@ const fetchGroups = async () => {
   loading.value = true
   try {
     const res = await getGroups()
-    console.log('获取到的分组数据:', res)  // 添加调试日志
+    // console.log('获取到的分组数据:', res)  // 添加调试日志
     groups.value = res.data || []
   } catch (error) {
     console.error('获取分组失败:', error)
@@ -373,7 +381,12 @@ const usersLoading = ref(false)
 const currentAuthGroup = ref<Group | null>(null)
 
 const userStore = useUserStore()
-const showAuthButton = computed(() => userStore.user?.role === 'admin')
+const showAuthButton = computed(() => userStore.user?.role === 'admin' || userStore.user?.role === 'superuser')
+
+// 判断是否可以编辑分组
+const canEdit = (group: Group) => {
+  return userStore.user?.role === 'admin' || group.creator?.id === userStore.user?.id
+}
 
 const handleAuth = async (group: Group) => {
   currentAuthGroup.value = group

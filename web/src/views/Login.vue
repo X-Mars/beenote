@@ -4,7 +4,7 @@
       <div class="login-content">
         <div class="login-left">
           <div class="welcome-text">
-            <h1>蜜蜂笔记</h1>
+            <h1>蜜蜂🐝笔记</h1>
             <p>便捷记录、高效管理、安全可靠</p>
           </div>
           <div class="decoration">
@@ -66,6 +66,30 @@
                   登录
                 </el-button>
               </el-form-item>
+              
+              <!-- 第三方登录 -->
+              <div class="third-party-login">
+                <div class="divider">
+                  <span>其他登录方式</span>
+                </div>
+                <div class="login-icons">
+                  <el-tooltip content="企业微信登录" placement="top">
+                    <div class="login-icon" @click="handleThirdPartyLogin(qrcodeUrls.wecom_url)">
+                      <img src="@/assets/wecom.png" alt="企业微信">
+                    </div>
+                  </el-tooltip>
+                  <el-tooltip content="飞书登录" placement="top">
+                    <div class="login-icon" @click="handleThirdPartyLogin(qrcodeUrls.feishu_url)">
+                      <img src="@/assets/feishu.png" alt="飞书">
+                    </div>
+                  </el-tooltip>
+                  <el-tooltip content="钉钉登录" placement="top">
+                    <div class="login-icon" @click="handleThirdPartyLogin(qrcodeUrls.dingtalk_url)">
+                      <img src="@/assets/dingtalk.png" alt="钉钉">
+                    </div>
+                  </el-tooltip>
+                </div>
+              </div>
             </el-form>
           </el-card>
         </div>
@@ -75,18 +99,24 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive } from 'vue'
+import { ref, reactive, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useUserStore } from '@/store/user'
 import { User, Lock, Notebook } from '@element-plus/icons-vue'
 import type { FormInstance } from 'element-plus'
-import request from '@/api/request'
+import { userApi } from '@/api/users'
+import { ElMessage } from 'element-plus'
 
 const router = useRouter()
 const userStore = useUserStore()
 const loginFormRef = ref<FormInstance>()
 const loading = ref(false)
 const rememberMe = ref(false)
+const qrcodeUrls = ref({
+  wecom_url: null,
+  feishu_url: null,
+  dingtalk_url: null
+})
 
 const loginForm = reactive({
   username: '',
@@ -111,12 +141,8 @@ const handleLogin = async () => {
     if (valid) {
       loading.value = true
       try {
-        const res = await request.post('/auth/login/', loginForm)
-        userStore.setToken(res.data.access)
-        
-        const userRes = await request.get('/auth/me/')
-        userStore.setUser(userRes.data)
-        localStorage.setItem('user', JSON.stringify(userRes.data))
+        console.log(loginForm)
+        await userStore.login(loginForm.username, loginForm.password)
         
         if (rememberMe.value) {
           localStorage.setItem('username', loginForm.username)
@@ -126,6 +152,7 @@ const handleLogin = async () => {
         
         router.push('/')
       } catch (error) {
+        ElMessage.error('登录失败：' + (error as Error).message)
         console.error(error)
       } finally {
         loading.value = false
@@ -140,6 +167,29 @@ if (savedUsername) {
   loginForm.username = savedUsername
   rememberMe.value = true
 }
+
+// 获取第三方登录二维码URL
+const fetchQRCodeUrls = async () => {
+  try {
+    const res = await userApi.getLoginQRCode()
+    qrcodeUrls.value = res.data
+  } catch (error) {
+    console.error('获取第三方登录二维码失败:', error)
+  }
+}
+
+// 处理第三方登录点击
+const handleThirdPartyLogin = (url: string | null) => {
+  if (url) {
+    window.location.href = url
+  } else {
+    ElMessage.warning('该登录方式未配置')
+  }
+}
+
+onMounted(() => {
+  fetchQRCodeUrls()
+})
 </script>
 
 <style scoped>
@@ -243,6 +293,7 @@ if (savedUsername) {
   padding: 40px;
   display: flex;
   align-items: center;
+  width: 100%;
 }
 
 .login-card {
@@ -253,8 +304,7 @@ if (savedUsername) {
 
 .card-header {
   text-align: center;
-  margin-bottom: 20px;
-  border: none;
+  /* margin-bottom: 20px; */
 }
 
 .logo {
@@ -267,6 +317,18 @@ if (savedUsername) {
   margin: 0;
   font-size: 24px;
   color: var(--el-text-color-primary);
+}
+
+:deep(.el-card) {
+  /* 去掉登录框周围阴影 */
+  box-shadow: none !important;
+  /* 圆角 */
+  border-radius: 80px;
+}
+
+:deep(.el-card__header) {
+  border-bottom: none;
+  padding-bottom: 0;
 }
 
 .login-form {
@@ -326,4 +388,64 @@ if (savedUsername) {
     padding: 20px;
   }
 }
-</style> 
+
+.third-party-login {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.divider {
+  position: relative;
+  margin: 20px 0;
+  text-align: center;
+}
+
+.divider::before,
+.divider::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  width: 35%;
+  height: 1px;
+  background-color: #dcdfe6;
+}
+
+.divider::before {
+  left: 0;
+}
+
+.divider::after {
+  right: 0;
+}
+
+.divider span {
+  background-color: white;
+  padding: 0 10px;
+  color: #909399;
+  font-size: 14px;
+}
+
+.login-icons {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.login-icon {
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.login-icon:hover {
+  transform: scale(1.1);
+}
+
+.login-icon img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+</style>

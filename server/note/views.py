@@ -12,6 +12,7 @@ from django.utils import timezone
 from datetime import timedelta, date
 from django.db.models.functions import TruncDate, TruncMonth
 from django.db.models import Q
+from rest_framework.exceptions import PermissionDenied
 
 class StandardResultsSetPagination(PageNumberPagination):
     page_size = 10
@@ -21,6 +22,20 @@ class StandardResultsSetPagination(PageNumberPagination):
 class NoteGroupViewSet(viewsets.ModelViewSet):
     serializer_class = NoteGroupSerializer
     permission_classes = [IsAuthenticated]
+
+    def get_object(self):
+        obj = super().get_object()
+        user = self.request.user
+        
+        # 如果是管理员，直接返回分组
+        if user.role == 'admin':
+            return obj
+        
+        # 检查用户是否是分组的创建者
+        if user != obj.creator:
+            raise PermissionDenied("您只能编辑自己创建的分组")
+        
+        return obj
 
     def get_queryset(self):
         user = self.request.user
@@ -40,6 +55,16 @@ class NoteGroupViewSet(viewsets.ModelViewSet):
         group = serializer.save(creator=self.request.user)
         self.request.user.note_group.add(group)
 
+    def perform_update(self, serializer):
+        # 检查用户是否有权限更新分组
+        obj = self.get_object()
+        user = self.request.user
+        
+        if user.role != 'admin' and user != obj.creator:
+            raise PermissionDenied("您只能编辑自己创建的分组")
+        
+        serializer.save()
+
 
 class NoteViewSet(viewsets.ModelViewSet):
     serializer_class = NoteSerializer
@@ -52,6 +77,26 @@ class NoteViewSet(viewsets.ModelViewSet):
     search_fields = [
         'title', 'content', 'group__id', 'group__name', 'creator__id', 'creator__username'
     ]
+
+    def get_object(self):
+        obj = super().get_object()
+        user = self.request.user
+        
+        # 如果是管理员，直接返回笔记
+        if user.role == 'admin':
+            return obj
+        
+        # 检查用户是否有权限访问该笔记
+        has_permission = (
+            user == obj.creator or  # 是笔记创建者
+            obj.note_users.filter(id=user.id).exists() or  # 直接授权
+            obj.group.note_group_users.filter(id=user.id).exists()  # 通过分组授权
+        )
+        
+        if not has_permission:
+            raise PermissionDenied("您没有权限查看此笔记")
+        
+        return obj
 
     def get_queryset(self):
         user = self.request.user

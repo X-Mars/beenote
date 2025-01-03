@@ -1,28 +1,5 @@
 <template>
   <div class="dashboard">
-    <!-- 添加用户信息区域 -->
-    <!-- <div class="user-info">
-      <el-dropdown trigger="click">
-        <div class="user-dropdown-link">
-          <span class="username">{{ user?.name || user?.username }}</span>
-          <el-avatar :size="40" class="avatar">
-            {{ (user?.name || user?.username)?.charAt(0).toUpperCase() }}
-          </el-avatar>
-        </div>
-        <template #dropdown>
-          <el-dropdown-menu>
-            <el-dropdown-item>
-              <el-icon><User /></el-icon>
-              个人资料
-            </el-dropdown-item>
-            <el-dropdown-item divided @click="handleLogout">
-              <el-icon><SwitchButton /></el-icon>
-              退出登录
-            </el-dropdown-item>
-          </el-dropdown-menu>
-        </template>
-      </el-dropdown>
-    </div> -->
 
     <!-- 数据卡片行 -->
     <el-row :gutter="20">
@@ -49,9 +26,9 @@
             <div class="chart-header">
               <h3>笔记趋势</h3>
               <el-radio-group v-model="timeRange" size="small">
-                <el-radio-button label="week">本周</el-radio-button>
-                <el-radio-button label="month">本月</el-radio-button>
-                <el-radio-button label="year">全年</el-radio-button>
+                <el-radio-button value="week">本周</el-radio-button>
+                <el-radio-button value="month">本月</el-radio-button>
+                <el-radio-button value="year">全年</el-radio-button>
               </el-radio-group>
             </div>
           </template>
@@ -135,7 +112,6 @@ const fetchStats = async () => {
       getNoteStats({ range: timeRange.value }),
       getActiveUsers()
     ])
-    console.log(activeUsersRes)
     
     // 更新笔记和分组数据
     cards.value[0].value = statsRes.data.total_notes

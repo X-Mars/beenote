@@ -12,6 +12,7 @@
         <el-select 
           v-model="note.group" 
           placeholder="选择分组"
+          :rules="[{ required: true, message: '请选择分组' }]"
           class="group-select"
         >
           <el-option
@@ -90,27 +91,35 @@ const fetchGroups = async () => {
 
 // 保存笔记
 const handleSave = async () => {
-  if (!note.value.title?.trim()) {
-    return ElMessage.warning('请输入标题')
+  if (!note.value.group) {
+    ElMessage.warning('请选择分组后再发布，或者创建一个新分组')
+    return
+  }
+  if (!note.value.title) {
+    ElMessage.warning('请输入标题')
+    return
   }
 
-  if (!note.value.content?.trim()) {
-    return ElMessage.warning('请输入内容')
+  if (!note.value.title) {
+    ElMessage.warning('请输入标题')
+    return
+  }
+
+  if (!note.value.content) {
+    ElMessage.warning('请输入内容')
+    return
   }
 
   saving.value = true
   try {
-    let noteId: string
-    if (route.params.id) {
-      await updateNote(route.params.id, note.value)
-      noteId = route.params.id
+    if (isEdit.value) {
+      await updateNote(route.params.id as string, note.value)
       ElMessage.success('更新成功')
     } else {
       const res = await createNote(note.value)
-      noteId = res.data.id
       ElMessage.success('创建成功')
+      router.push(`/notes/view/${res.data.id}`)
     }
-    router.push(`/notes/view/${noteId}`)
   } catch (error) {
     console.error(error)
     ElMessage.error('保存失败')
@@ -152,14 +161,16 @@ onMounted(async () => {
 }
 
 .title-input :deep(.el-input__inner) {
-  font-size: 20px;
+  /* font-size: 20px; */
   font-weight: bold;
   height: 100%;
   line-height: 34px;
 }
 
 .group-select {
+  /* font-size: 20px; */
   width: 200px;
+  margin-right: 15px;
 }
 
 /* .group-select :deep(.el-input__wrapper) {

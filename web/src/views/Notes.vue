@@ -17,7 +17,6 @@
             :label="group.name"
             :value="group.id"
           >
-            <el-icon><FolderOpened /></el-icon>
             <span>{{ group.name }}</span>
           </el-option>
         </el-select>
@@ -34,10 +33,10 @@
           </template>
         </el-input>
         <el-radio-group v-model="viewMode" size="small">
-          <el-radio-button label="table">
+          <el-radio-button value="table">
             <el-icon><List /></el-icon>
           </el-radio-button>
-          <el-radio-button label="grid">
+          <el-radio-button value="grid">
             <el-icon><Grid /></el-icon>
           </el-radio-button>
         </el-radio-group>
@@ -136,7 +135,7 @@
                   {{ note.creator?.name || note.creator?.username }}
                 </el-tag>
                 <el-dropdown trigger="click">
-                  <el-button type="text" @click.stop>
+                  <el-button link @click.stop>
                     <el-icon><More /></el-icon>
                   </el-button>
                   <template #dropdown>
@@ -227,7 +226,8 @@ import {
   Document,
   FolderOpened,
   More,
-  Key
+  Key,
+  Notebook
 } from '@element-plus/icons-vue'
 import { ElMessageBox, ElMessage } from 'element-plus'
 import { 
@@ -394,7 +394,7 @@ const handleAuthChange = async (user: any) => {
 
 const userStore = useUserStore()
 
-const showAuthButton = computed(() => userStore.user?.role === 'admin')
+const showAuthButton = computed(() => userStore.user?.role === 'admin' || userStore.user?.role === 'superuser')
 
 onMounted(() => {
   fetchNotes()

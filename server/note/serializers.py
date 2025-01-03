@@ -7,12 +7,13 @@ class NoteGroupSerializer(serializers.ModelSerializer):
     member_count = serializers.SerializerMethodField()
     created_at = serializers.DateTimeField(format='%Y-%m-%d %H:%M:%S', read_only=True)
     updated_at = serializers.DateTimeField(format='%Y-%m-%d %H:%M:%S', read_only=True)
+    creator = UserSerializer(read_only=True)
 
     class Meta:
         model = NoteGroup
         fields = ['id', 'name', 'description', 'created_at', 'updated_at', 
-                 'note_count', 'member_count']
-        read_only_fields = ['created_at', 'updated_at']
+                 'note_count', 'member_count', 'creator']
+        read_only_fields = ['created_at', 'updated_at', 'creator']
 
     def get_note_count(self, obj):
         return obj.notes.count()
