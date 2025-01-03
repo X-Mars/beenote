@@ -45,6 +45,7 @@
 ![仪表盘](https://github.com/X-Mars/beenote/blob/master/images/2.png?raw=true)
 ![笔记管理](https://github.com/X-Mars/beenote/blob/master/images/3.png?raw=true)
 ![笔记授权](https://github.com/X-Mars/beenote/blob/master/images/4.png?raw=true)
+![三方登录](https://github.com/X-Mars/beenote/blob/master/images/5.png?raw=true)
 
 ## 开发环境
 

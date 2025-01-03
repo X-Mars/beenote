@@ -1,11 +1,13 @@
+/* eslint-disable no-useless-catch */
 import { defineStore } from 'pinia'
 import type { User } from '@/api/types'
-import request from '@/api/request'
+import { userApi } from '@/api/users'
 
 export const useUserStore = defineStore('user', {
   state: () => ({
     user: null as User | null,
     token: localStorage.getItem('token'),
+    refreshToken: localStorage.getItem('refreshToken'),
     initialized: false
   }),
   
@@ -17,11 +19,17 @@ export const useUserStore = defineStore('user', {
   actions: {
     setUser(user: User) {
       this.user = user
+      localStorage.setItem('user', user)
     },
     
     setToken(token: string) {
       this.token = token
       localStorage.setItem('token', token)
+    },
+
+    setRefreshToken(refreshToken: string) {
+      this.refreshToken = refreshToken
+      localStorage.setItem('refreshToken', refreshToken)
     },
     
     clearUser() {
@@ -33,9 +41,9 @@ export const useUserStore = defineStore('user', {
 
     async fetchUserInfo() {
       try {
-        const res = await request.get('/auth/me/')
+        const res = await userApi.getUserInfo()
         this.user = res.data
-        localStorage.setItem('user', JSON.stringify(res.data))
+        this.setUser(res.data)
       } catch (error) {
         console.error('获取用户信息失败:', error)
         this.clearUser()
@@ -59,6 +67,54 @@ export const useUserStore = defineStore('user', {
       } else {
         this.initialized = true
       }
-    }
+    },
+
+    async login(username: string, password: string) {
+      try {
+        const response = await userApi.login({ username, password })
+        this.setToken(response.data.access)
+        this.setRefreshToken(response.data.refresh)
+        this.setUser(response.data.user)
+        return response
+      } catch (error) {
+        throw error
+      }
+    },
+
+    async wecomLogin(code: string) {
+      try {
+        const response = await userApi.wecomLogin(code)
+        this.setToken(response.data.access)
+        this.setRefreshToken(response.data.refresh)
+        this.setUser(response.data.user)
+        return response
+      } catch (error) {
+        throw error
+      }
+    },
+       
+    async feishuLogin(code: string) {
+      try {
+        const response = await userApi.feishuLogin(code)
+        this.setToken(response.data.access)
+        this.setRefreshToken(response.data.refresh)
+        this.setUser(response.data.user)
+        return response
+      } catch (error) {
+        throw error
+      }
+    },
+
+    async dingtalkLogin(authCode: string) {
+      try {
+        const response = await userApi.dingtalkLogin(authCode)
+        this.setToken(response.data.access)
+        this.setRefreshToken(response.data.refresh)
+        this.setUser(response.data.user)
+        return response
+      } catch (error) {
+        throw error
+      }
+    },
   }
 }) 

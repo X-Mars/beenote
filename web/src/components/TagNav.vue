@@ -4,7 +4,7 @@
       <el-tag
         v-for="item in visitedViews"
         :key="item.path"
-        :type="isActive(item) ? '' : 'info'"
+        :type="isActive(item) ? 'primary' : 'info'"
         :effect="isActive(item) ? 'dark' : 'plain'"
         :class="{ active: isActive(item) }"
         round

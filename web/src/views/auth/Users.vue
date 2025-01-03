@@ -12,12 +12,16 @@
       stripe
     >
       <el-table-column prop="username" label="用户名" />
-      <el-table-column prop="first_name" label="姓" />
-      <el-table-column prop="last_name" label="名" />
+      <el-table-column prop="first_name" label="姓名">
+        <template #default="{ row }">
+          {{ row.first_name }} {{ row.last_name }}
+        </template>
+      </el-table-column>
+      <!-- <el-table-column prop="last_name" label="名" /> -->
       <el-table-column prop="email" label="邮箱" />
       <el-table-column prop="role" label="角色">
         <template #default="{ row }">
-          <el-tag>{{ row.role }}</el-tag>
+          <el-tag :type="getRoleTagType(row.role)">{{ getRoleLabel(row.role) }}</el-tag>
         </template>
       </el-table-column>
       <el-table-column prop="is_active" label="状态" width="100">
@@ -42,7 +46,7 @@
           {{ formatDateTime(row.date_joined) }}
         </template>
       </el-table-column>
-      <el-table-column label="操作" width="280" fixed="right">
+      <el-table-column label="操作" :width="showAuthButton ? 280 : 200" fixed="right">
         <template #default="{ row }">
           <el-button-group>
             <el-button 
@@ -114,6 +118,7 @@
         </el-form-item>
         <el-form-item label="角色" prop="role">
           <el-select v-model="form.role">
+            <el-option label="超级管理员" value="superuser" />
             <el-option label="管理员" value="admin" />
             <el-option label="普通用户" value="user" />
           </el-select>
@@ -454,7 +459,25 @@ const handleGroupAuthChange = async (group: any) => {
 
 const userStore = useUserStore()
 
-const showAuthButton = computed(() => userStore.user?.role === 'admin')
+const showAuthButton = computed(() => userStore.user?.role === 'admin' || userStore.user?.role === 'superuser')
+
+const getRoleLabel = (role: string) => {
+  const roleMap: { [key: string]: string } = {
+    'superuser': '超级管理员',
+    'admin': '管理员',
+    'user': '普通用户'
+  }
+  return roleMap[role] || role
+}
+
+const getRoleTagType = (role: string) => {
+  const typeMap: { [key: string]: '' | 'success' | 'warning' | 'danger' } = {
+    'superuser': 'danger',
+    'admin': 'warning',
+    'user': 'success'
+  }
+  return typeMap[role] || ''
+}
 
 onMounted(() => {
   fetchUsers()

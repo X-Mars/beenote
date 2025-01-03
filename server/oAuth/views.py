@@ -4,11 +4,11 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth import authenticate
-from .serializers import UserSerializer, LoginSerializer, GroupSerializer
+from .serializers import UserSerializer, LoginSerializer, GroupSerializer, WeComConfigSerializer, FeiShuConfigSerializer, DingTalkConfigSerializer
 from django.utils import timezone
 from datetime import timedelta
 from rest_framework.decorators import api_view
-from .models import User
+from .models import User, WeComConfig, FeiShuConfig, DingTalkConfig
 from django.contrib.auth.models import Group
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import viewsets
@@ -17,6 +17,7 @@ from django.contrib.auth.hashers import make_password
 from django.db.models import Q
 from note.models import NoteGroup  # 导入笔记分组模型
 from rest_framework.exceptions import PermissionDenied
+from rest_framework.decorators import action
 
 
 class LoginView(APIView):
@@ -112,7 +113,7 @@ class UserViewSet(viewsets.ModelViewSet):
     
     def check_admin(self):
         """检查当前用户是否是管理员"""
-        if not self.request.user.role == 'admin':
+        if not self.request.user.role == 'admin' and not self.request.user.role == 'superuser':
             raise PermissionDenied("只有管理员可以执行此操作")
     
     def get_queryset(self):
@@ -141,10 +142,13 @@ class UserViewSet(viewsets.ModelViewSet):
         if not group_name:
             group_name = user.username
             
-        NoteGroup.objects.create(
+        note_group_instance = NoteGroup.objects.create(
             name=group_name,
             creator=user
         )
+        note_group_instance.creator = user
+        note_group_instance.save()
+        user.note_group.add(note_group_instance)
     
     def perform_update(self, serializer):
         # 先保存一份请求数据的副本
@@ -199,3 +203,60 @@ class GroupViewSet(viewsets.ModelViewSet):
         if search:
             queryset = queryset.filter(name__icontains=search)
         return queryset
+
+class WeComConfigViewSet(viewsets.ModelViewSet):
+    queryset = WeComConfig.objects.all()
+    serializer_class = WeComConfigSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        if not self.request.user.role in ['admin', 'superuser']:
+            raise PermissionDenied("只有管理员可以管理配置")
+        return super().get_queryset()
+
+    @action(detail=False, methods=['get'])
+    def current(self):
+        """获取当前启用的配置"""
+        config = WeComConfig.objects.filter(enabled=True).first()
+        if config:
+            serializer = self.get_serializer(config)
+            return Response(serializer.data)
+        return Response(None)
+
+class FeiShuConfigViewSet(viewsets.ModelViewSet):
+    queryset = FeiShuConfig.objects.all()
+    serializer_class = FeiShuConfigSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        if not self.request.user.role in ['admin', 'superuser']:
+            raise PermissionDenied("只有管理员可以管理配置")
+        return super().get_queryset()
+
+    @action(detail=False, methods=['get'])
+    def current(self):
+        """获取当前启用的配置"""
+        config = FeiShuConfig.objects.filter(enabled=True).first()
+        if config:
+            serializer = self.get_serializer(config)
+            return Response(serializer.data)
+        return Response(None)
+
+class DingTalkConfigViewSet(viewsets.ModelViewSet):
+    queryset = DingTalkConfig.objects.all()
+    serializer_class = DingTalkConfigSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        if not self.request.user.role in ['admin', 'superuser']:
+            raise PermissionDenied("只有管理员可以管理配置")
+        return super().get_queryset()
+
+    @action(detail=False, methods=['get'])
+    def current(self):
+        """获取当前启用的配置"""
+        config = DingTalkConfig.objects.filter(enabled=True).first()
+        if config:
+            serializer = self.get_serializer(config)
+            return Response(serializer.data)
+        return Response(None)

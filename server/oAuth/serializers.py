@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from django.contrib.auth.models import Group
-from .models import User, NoteGroup
+from .models import User, NoteGroup, WeComConfig, FeiShuConfig, DingTalkConfig
 from django.contrib.auth.hashers import make_password
 
 class UserSerializer(serializers.ModelSerializer):
@@ -20,7 +20,7 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = [
-            'id', 'username', 'name', 'first_name', 'last_name', 
+            'id', 'username', 'name', 'first_name', 'last_name', 'avatar',
             'email', 'role', 'is_active', 'last_active_at', 
             'date_joined', 'notes', 'note_group', 'password'
         ]
@@ -50,3 +50,21 @@ class GroupSerializer(serializers.ModelSerializer):
 class LoginSerializer(serializers.Serializer):
     username = serializers.CharField()
     password = serializers.CharField() 
+
+class WeComConfigSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = WeComConfig
+        fields = ['id', 'corp_id', 'agent_id', 'secret', 'redirect_uri', 'enabled', 'created_at', 'updated_at']
+        read_only_fields = ['created_at', 'updated_at']
+
+class FeiShuConfigSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = FeiShuConfig
+        fields = ['id', 'app_id', 'app_secret', 'redirect_uri', 'enabled', 'created_at', 'updated_at']
+        read_only_fields = ['created_at', 'updated_at']
+
+class DingTalkConfigSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = DingTalkConfig
+        fields = ['id', 'app_id', 'client_id', 'client_secret', 'redirect_uri', 'enabled', 'created_at', 'updated_at']
+        read_only_fields = ['created_at', 'updated_at']
