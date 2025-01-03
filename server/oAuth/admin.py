@@ -3,7 +3,8 @@ from django.contrib.auth.admin import UserAdmin, GroupAdmin
 from django.contrib.auth.models import Group
 from .models import (
     User, WeComConfig, FeiShuConfig, 
-    DingTalkConfig, WeComUser, FeiShuUser, DingTalkUser
+    DingTalkConfig, WeComUser, FeiShuUser, DingTalkUser,
+    GitHubConfig, GitHubUser
 )
 
 
@@ -151,6 +152,40 @@ class DingTalkUserAdmin(admin.ModelAdmin):
         }),
         ('其他信息', {
             'fields': ('avatar',)
+        }),
+        ('时间信息', {
+            'fields': ('created_at', 'updated_at')
+        }),
+    )
+
+
+@admin.register(GitHubConfig)
+class GitHubConfigAdmin(admin.ModelAdmin):
+    list_display = ('client_id', 'client_secret', 'redirect_uri', 'enabled', 'created_at', 'updated_at')
+    list_filter = ('enabled',)
+    search_fields = ('client_id',)
+    readonly_fields = ('created_at', 'updated_at')
+    fieldsets = (
+        (None, {
+            'fields': ('client_id', 'client_secret', 'redirect_uri', 'enabled')
+        }),
+        ('时间信息', {
+            'fields': ('created_at', 'updated_at')
+        }),
+    )
+
+
+@admin.register(GitHubUser)
+class GitHubUserAdmin(admin.ModelAdmin):
+    list_display = ('name', 'user', 'login', 'email', 'github_id')
+    search_fields = ('name', 'login', 'email', 'user__username', 'github_id')
+    readonly_fields = ('created_at', 'updated_at')
+    fieldsets = (
+        (None, {
+            'fields': ('user', 'github_id', 'login')
+        }),
+        ('基本信息', {
+            'fields': ('name', 'email', 'avatar_url', 'bio', 'location')
         }),
         ('时间信息', {
             'fields': ('created_at', 'updated_at')

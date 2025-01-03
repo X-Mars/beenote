@@ -38,12 +38,18 @@ export const userApi = {
     return request.post<LoginResponse>('/auth/dingtalk/login/', { authCode })
   },
 
+  // GitHub登录
+  githubLogin: (code: string) => {
+    return request.post<LoginResponse>('/auth/github/login/', { code })
+  },
+
   // 获取第三方登录二维码
   getLoginQRCode: () => {
     return request.get<{
       wecom_url: string | null
       feishu_url: string | null
       dingtalk_url: string | null
+      github_url: string | null
     }>('/auth/login/qrcode/')
   }
 } 

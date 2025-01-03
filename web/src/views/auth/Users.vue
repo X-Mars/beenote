@@ -195,6 +195,7 @@ const users = ref<User[]>([])
 const loading = ref(false)
 const submitting = ref(false)
 const dialogVisible = ref(false)
+const dialogTitle = ref('')
 const currentUser = ref<User | null>(null)
 const formRef = ref<FormInstance>()
 
@@ -209,8 +210,31 @@ const form = reactive({
 })
 
 const rules: FormRules = {
-  username: [{ required: true, message: '请输入用户名' }],
-  email: [{ type: 'email', message: '请输入正确的邮箱地址' }]
+  username: [
+    { required: true, message: '请输入用户名', trigger: 'blur' }
+  ],
+  password: [
+    { required: true, message: '请输入密码', trigger: 'blur' },
+    { 
+      validator: (rule, value, callback) => {
+        if (value.length < 6) {
+          callback(new Error('密码长度至少为6位，并同时包含大小写字母和数字'))
+        } else if (!/[A-Z]/.test(value)) {
+          callback(new Error('密码长度至少为6位，并同时包含大小写字母和数字'))
+        } else if (!/[a-z]/.test(value)) {
+          callback(new Error('密码长度至少为6位，并同时包含大小写字母和数字'))
+        } else if (!/\d/.test(value)) {
+          callback(new Error('密码长度至少为6位，并同时包含大小写字母和数字'))
+        } else {
+          callback()
+        }
+      },
+      trigger: 'change'
+    }
+  ],
+  role: [
+    { required: true, message: '请选择角色', trigger: 'change' }
+  ]
 }
 
 const fetchUsers = async () => {
@@ -244,8 +268,17 @@ const resetForm = () => {
 }
 
 const handleAdd = () => {
-  resetForm()
   dialogVisible.value = true
+  dialogTitle.value = '新建用户'
+  form.value = {
+    username: '',
+    password: '',
+    first_name: '',
+    last_name: '',
+    email: '',
+    role: 'user',
+    is_active: true
+  }
 }
 
 const handleEdit = (user: User) => {
@@ -262,42 +295,27 @@ const handleEdit = (user: User) => {
   dialogVisible.value = true
 }
 
-const handleSubmit = async (formEl?: FormInstance | null) => {
-  if (!formEl) return
-  
-  await formEl.validate(async (valid) => {
+const handleSubmit = () => {
+  if (!formRef.value) return
+  formRef.value.validate((valid) => {
     if (valid) {
-      submitting.value = true
-      try {
-        const data: Record<string, any> = {
-          username: form.username,
-          first_name: form.first_name,
-          last_name: form.last_name,
-          email: form.email,
-          role: form.role,
-          is_active: form.is_active
-        }
-        
-        if (form.password.trim() && currentUser?.username !== userStore.user?.username) {
-          data.password = form.password
-        }
-        
-        if (currentUser.value) {
-          await updateUser(currentUser.value.id, data)
-          ElMessage.success('更新成功')
-        } else {
-          await createUser(data)
-          ElMessage.success('创建成功')
-        }
-        
-        dialogVisible.value = false
-        await fetchUsers()
-      } catch (error) {
-        console.error(error)
-        ElMessage.error('保存失败')
-      } finally {
-        submitting.value = false
-      }
+      loading.value = true
+      dialogVisible.value = false
+      const promise = currentUser.value
+        ? updateUser(currentUser.value.id, form)
+        : createUser(form)
+      promise
+        .then(() => {
+          ElMessage.success('保存成功')
+          dialogVisible.value = false
+          fetchUsers()
+        })
+        .catch(err => {
+          ElMessage.error(err.message || '保存失败')
+        })
+        .finally(() => {
+          loading.value = false
+        })
     }
   })
 }

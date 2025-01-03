@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from django.contrib.auth.models import Group
-from .models import User, NoteGroup, WeComConfig, FeiShuConfig, DingTalkConfig
+from .models import User, NoteGroup, WeComConfig, FeiShuConfig, DingTalkConfig, GitHubConfig, GitHubUser
 from django.contrib.auth.hashers import make_password
 
 class UserSerializer(serializers.ModelSerializer):
@@ -67,4 +67,16 @@ class DingTalkConfigSerializer(serializers.ModelSerializer):
     class Meta:
         model = DingTalkConfig
         fields = ['id', 'app_id', 'client_id', 'client_secret', 'redirect_uri', 'enabled', 'created_at', 'updated_at']
+        read_only_fields = ['created_at', 'updated_at']
+
+class GitHubConfigSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = GitHubConfig
+        fields = ['id', 'client_id', 'client_secret', 'redirect_uri', 'enabled', 'created_at', 'updated_at']
+        read_only_fields = ['created_at', 'updated_at']
+
+class GitHubUserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = GitHubUser
+        fields = ['id', 'github_id', 'login', 'name', 'email', 'avatar_url', 'created_at', 'updated_at']
         read_only_fields = ['created_at', 'updated_at']

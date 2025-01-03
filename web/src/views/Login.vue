@@ -70,7 +70,7 @@
               <!-- 第三方登录 -->
               <div class="third-party-login">
                 <div class="divider">
-                  <span>其他登录方式</span>
+                  <span>第三方账号登录</span>
                 </div>
                 <div class="login-icons">
                   <el-tooltip content="企业微信登录" placement="top">
@@ -86,6 +86,11 @@
                   <el-tooltip content="钉钉登录" placement="top">
                     <div class="login-icon" @click="handleThirdPartyLogin(qrcodeUrls.dingtalk_url)">
                       <img src="@/assets/dingtalk.png" alt="钉钉">
+                    </div>
+                  </el-tooltip>
+                  <el-tooltip content="GitHub登录" placement="top">
+                    <div class="login-icon" @click="handleThirdPartyLogin(qrcodeUrls.github_url)">
+                      <img src="@/assets/github.png" alt="GitHub">
                     </div>
                   </el-tooltip>
                 </div>
@@ -116,7 +121,8 @@ const rememberMe = ref(false)
 const qrcodeUrls = ref({
   wecom_url: null,
   feishu_url: null,
-  dingtalk_url: null
+  dingtalk_url: null,
+  github_url: null
 })
 
 const loginForm = reactive({
@@ -458,5 +464,11 @@ onMounted(() => {
   width: 100%;
   height: 100%;
   object-fit: contain;
+  filter: var(--github-icon-filter, none);
+}
+
+/* 暗色主题下GitHub图标颜色 */
+:root[data-theme='dark'] {
+  --github-icon-filter: invert(1);
 }
 </style>

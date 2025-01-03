@@ -4,11 +4,11 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth import authenticate
-from .serializers import UserSerializer, LoginSerializer, GroupSerializer, WeComConfigSerializer, FeiShuConfigSerializer, DingTalkConfigSerializer
+from .serializers import UserSerializer, LoginSerializer, GroupSerializer, WeComConfigSerializer, FeiShuConfigSerializer, DingTalkConfigSerializer, GitHubConfigSerializer
 from django.utils import timezone
 from datetime import timedelta
 from rest_framework.decorators import api_view
-from .models import User, WeComConfig, FeiShuConfig, DingTalkConfig
+from .models import User, WeComConfig, FeiShuConfig, DingTalkConfig, GitHubConfig
 from django.contrib.auth.models import Group
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import viewsets
@@ -256,6 +256,25 @@ class DingTalkConfigViewSet(viewsets.ModelViewSet):
     def current(self):
         """获取当前启用的配置"""
         config = DingTalkConfig.objects.filter(enabled=True).first()
+        if config:
+            serializer = self.get_serializer(config)
+            return Response(serializer.data)
+        return Response(None)
+
+class GitHubConfigViewSet(viewsets.ModelViewSet):
+    queryset = GitHubConfig.objects.all()
+    serializer_class = GitHubConfigSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        if not self.request.user.role in ['admin', 'superuser']:
+            raise PermissionDenied("只有管理员可以管理配置")
+        return super().get_queryset()
+
+    @action(detail=False, methods=['get'])
+    def current(self):
+        """获取当前启用的配置"""
+        config = GitHubConfig.objects.filter(enabled=True).first()
         if config:
             serializer = self.get_serializer(config)
             return Response(serializer.data)

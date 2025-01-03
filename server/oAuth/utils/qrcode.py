@@ -9,7 +9,7 @@ from django.shortcuts import redirect
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from ..models import WeComConfig, FeiShuConfig, DingTalkConfig
+from ..models import WeComConfig, FeiShuConfig, DingTalkConfig, GitHubConfig
 from urllib.parse import quote
 import time
 import hmac
@@ -29,11 +29,13 @@ class LoginQRCodeView(APIView):
             wecom_config = WeComConfig.objects.filter(enabled=True).first()
             feishu_config = FeiShuConfig.objects.filter(enabled=True).first()
             dingtalk_config = DingTalkConfig.objects.filter(enabled=True).first()
+            github_config = GitHubConfig.objects.filter(enabled=True).first()
 
             result = {
                 'wecom_url': None,
                 'feishu_url': None,
-                'dingtalk_url': None
+                'dingtalk_url': None,
+                'github_url': None
             }
 
             # 生成企业微信登录二维码URL
@@ -73,6 +75,17 @@ class LoginQRCodeView(APIView):
                     f'&redirect_uri={dingtalk_config.redirect_uri}'
                 )
                 result['dingtalk_url'] = dingtalk_url
+
+            # 生成GitHub登录URL
+            if github_config:
+                github_url = (
+                    'https://github.com/login/oauth/authorize'
+                    f'?client_id={github_config.client_id}'
+                    f'&redirect_uri={github_config.redirect_uri}'
+                    '&scope=read:user,user:email'
+                    '&state=github'
+                )
+                result['github_url'] = github_url
 
             return Response(result)
 

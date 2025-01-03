@@ -61,4 +61,11 @@ export interface Group {
     username: string
     name: string
   }
+}
+
+export interface OAuthUrls {
+  wecom_url: string | null
+  feishu_url: string | null
+  dingtalk_url: string | null
+  github_url: string | null
 } 
