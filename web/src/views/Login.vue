@@ -100,7 +100,7 @@
 
 <script setup lang="ts">
 import { ref, reactive, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 import { useUserStore } from '@/store/user'
 import { User, Lock, Notebook } from '@element-plus/icons-vue'
 import type { FormInstance } from 'element-plus'
@@ -108,6 +108,7 @@ import { userApi } from '@/api/users'
 import { ElMessage } from 'element-plus'
 
 const router = useRouter()
+const route = useRoute()
 const userStore = useUserStore()
 const loginFormRef = ref<FormInstance>()
 const loading = ref(false)
@@ -189,6 +190,16 @@ const handleThirdPartyLogin = (url: string | null) => {
 
 onMounted(() => {
   fetchQRCodeUrls()
+  const { username, password } = route.query
+  if (username) {
+    loginForm.username = username as string
+  }
+  if (password) {
+    loginForm.password = password as string
+  }
+  // if (username && password) {
+  //   handleLogin()
+  // }
 })
 </script>
 
