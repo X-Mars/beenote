@@ -18,7 +18,7 @@
 
 ## demo（待上线）
 
-<http://beenote.huoxingxiaoliu.com>  
+<https://beenote.huoxingxiaoliu.com/login?username=admin&password=mifengbiji>  
 用户名：admin  
 密码：mifengbiji  
 
