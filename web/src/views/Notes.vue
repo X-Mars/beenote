@@ -101,7 +101,7 @@
         <el-pagination
           v-model:current-page="currentPage"
           v-model:page-size="pageSize"
-          :page-sizes="[10, 20, 50, 100]"
+          :page-sizes="[12, 24, 48, 96]"
           :total="total"
           layout="total, sizes, prev, pager, next"
           @size-change="handleSizeChange"
@@ -255,7 +255,7 @@ const currentGroup = ref<number | null>(null)
 const searchKey = ref('')
 const viewMode = ref<'table' | 'grid'>('grid')
 const currentPage = ref(1)
-const pageSize = ref(10)
+const pageSize = ref(12)
 const total = ref(0)
 
 const filteredNotes = computed(() => notes.value)
