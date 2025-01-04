@@ -71,7 +71,7 @@
             </a>
             <el-dropdown @command="handleCommand">
               <span class="user-dropdown">
-                <img width="32px" :src="userStore.user?.avatar || '@/assets/logo.png'" style="margin-right: 16px; background-color: #fff;"/>
+                <img width="32px" :src="userStore.user?.avatar || logo" style="margin-right: 16px; background-color: #fff;"/>
                 <span class="username">{{ userStore.user?.name || userStore.user?.username }}</span>
                 <el-icon><ArrowDown /></el-icon>
               </span>
@@ -169,7 +169,7 @@
             </a>
             <el-dropdown @command="handleCommand">
               <span class="user-dropdown">
-                <img width="32px" :src="userStore.user?.avatar || '@/assets/logo.png'" style="margin-right: 16px; background-color: #fff;"/>
+                <img width="32px" :src="userStore.user?.avatar || logo" style="margin-right: 16px; background-color: #fff;"/>
                 <span class="username">{{ userStore.user?.name || userStore.user?.username }}</span>
                 <el-icon><ArrowDown /></el-icon>
               </span>
@@ -210,6 +210,7 @@ import { ref, computed, watch, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useUserStore } from '@/store/user'
 import TagNav from '@/components/TagNav.vue'
+import logo from '@/assets/logo.png';
 
 const route = useRoute()
 const router = useRouter()
