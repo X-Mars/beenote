@@ -159,12 +159,12 @@
           <div class="header-right">
             <a href="https://qm.qq.com/cgi-bin/qm/qr?k=a_y5qjuIfBYZHkhGg4JTZqGjTk3KUI5T&jump_from=webapi&authKey=qJpb8UQWFJcxKBdT/zq9kGBqiMxOm9k3TkfYeAtaVtHAbKbIfxMiGBolmP+aWa5b" target="_blank">
               <el-tooltip content="加入QQ摸鱼群" placement="bottom">
-                <el-avatar :size="32" src="/src/assets/qq.png" style="margin-right: 16px; background-color: #fff;"/>
+                <img width="32px" src="@/assets/qq.png" style="margin-right: 16px; background-color: #fff;"/>
               </el-tooltip>
             </a>
             <a href="https://github.com/X-Mars/beenote" target="_blank">
               <el-tooltip content="访问 火星小刘的 GitHub 仓库" placement="bottom">
-                <el-avatar :size="32" src="/src/assets/github.png" style="margin-right: 16px; background-color: #fff;" />
+                <img width="32px" src="@/assets/github.png" style="margin-right: 16px; background-color: #fff;"/>
               </el-tooltip>
             </a>
             <el-dropdown @command="handleCommand">
