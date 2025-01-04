@@ -18,6 +18,8 @@ from django.db.models import Q
 from note.models import NoteGroup  # 导入笔记分组模型
 from rest_framework.exceptions import PermissionDenied
 from rest_framework.decorators import action
+from rest_framework.decorators import permission_classes
+from rest_framework.permissions import AllowAny
 
 
 class LoginView(APIView):
@@ -279,3 +281,9 @@ class GitHubConfigViewSet(viewsets.ModelViewSet):
             serializer = self.get_serializer(config)
             return Response(serializer.data)
         return Response(None)
+
+@api_view(['GET'])
+@permission_classes([AllowAny])
+def health_check(request):
+    """健康检查接口"""
+    return Response("ok", status=status.HTTP_200_OK)

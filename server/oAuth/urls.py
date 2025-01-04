@@ -3,7 +3,7 @@ from rest_framework.routers import DefaultRouter
 from .views import (
     LoginView, UserInfoView, UserViewSet, GroupViewSet,
     WeComConfigViewSet, FeiShuConfigViewSet, DingTalkConfigViewSet,
-    GitHubConfigViewSet
+    GitHubConfigViewSet, health_check
 )
 from .utils import WeComLoginView, FeiShuLoginView, DingTalkLoginView, LoginQRCodeView, GitHubLoginView
 from rest_framework_simplejwt.views import TokenRefreshView
@@ -32,4 +32,5 @@ urlpatterns = [
     path('refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('me/', UserInfoView.as_view(), name='user_info'),
     path('stats/', views.get_stats, name='user-stats'),
+    path('health/', health_check, name='health_check'),
 ] 
