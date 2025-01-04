@@ -16,11 +16,17 @@
 5. 超级管理员可以配置第三方登录
 6. 用户只可以看到管理员授权的**笔记和笔记分组**
 
-## demo（待上线）
+## demo
 
 <https://beenote.huoxingxiaoliu.com/login?username=admin&password=mifengbiji>  
 用户名：admin  
 密码：mifengbiji  
+
+## Docker快速开始
+
+```shell
+docker compose up
+```
 
 ## 跟着火星小刘学运维开发
 
@@ -29,16 +35,12 @@
 ## qq群
 
 欢迎加入beenote-笔记与知识仓库。
-<a target="_blank" href="https://qm.qq.com/cgi-bin/qm/qr?k=a_y5qjuIfBYZHkhGg4JTZqGjTk3KUI5T&jump_from=webapi&authKey=qJpb8UQWFJcxKBdT/zq9kGBqiMxOm9k3TkfYeAtaVtHAbKbIfxMiGBolmP+aWa5b"><img border="0" src="https://pub.idqqimg.com/wpa/images/group.png" alt="vue+django+zabbix+grafana" title="vue+django+zabbix+grafana"></a>
 
-<div style="display: flex; gap: 20px;">
-  <a href="https://qm.qq.com/cgi-bin/qm/qr?k=a_y5qjuIfBYZHkhGg4JTZqGjTk3KUI5T&jump_from=webapi&authKey=qJpb8UQWFJcxKBdT/zq9kGBqiMxOm9k3TkfYeAtaVtHAbKbIfxMiGBolmP+aWa5b" target="_blank">
-    <img src="https://github.com/X-Mars/beenote/blob/master/images/qrcode.jpg?raw=true" alt="QR Code" width="40%" height="40%">
-  </a>
-  <a href="https://space.bilibili.com/439068477" target="_blank">
-    <img src="https://github.com/X-Mars/Zabbix-Alert-WeChat/blob/master/images/5.jpg?raw=true" alt="B站火星小刘" width="53.4%" height="53.4%">
-  </a>
-</div>
+[![QQ群](https://pub.idqqimg.com/wpa/images/group.png)](https://qm.qq.com/cgi-bin/qm/qr?k=a_y5qjuIfBYZHkhGg4JTZqGjTk3KUI5T&jump_from=webapi&authKey=qJpb8UQWFJcxKBdT/zq9kGBqiMxOm9k3TkfYeAtaVtHAbKbIfxMiGBolmP+aWa5b)
+
+[![QQ群二维码](https://github.com/X-Mars/beenote/blob/master/images/qrcode.jpg?raw=true)](https://qm.qq.com/cgi-bin/qm/qr?k=a_y5qjuIfBYZHkhGg4JTZqGjTk3KUI5T&jump_from=webapi&authKey=qJpb8UQWFJcxKBdT/zq9kGBqiMxOm9k3TkfYeAtaVtHAbKbIfxMiGBolmP+aWa5b)
+
+[![B站火星小刘](https://github.com/X-Mars/Zabbix-Alert-WeChat/blob/master/images/5.jpg?raw=true)](https://space.bilibili.com/439068477)
 
 ## 截图展示
 

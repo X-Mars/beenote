@@ -380,9 +380,9 @@ const groupPieOption = ref<EChartsOption>({
 
 <style scoped>
 .dashboard {
-  padding: 20px;
+  padding: 10px;
   background-color: #f5f7fa;
-  min-height: 100%;
+  min-height: calc(100vh - 130px);
 }
 
 /* 数据卡片样式 */

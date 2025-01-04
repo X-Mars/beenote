@@ -1,5 +1,5 @@
 <template>
-  <el-container class="layout-container">
+  <el-container class="layout-container layout-wrapper">
     <!-- 顶部导航模式 -->
     <template v-if="layoutMode === 'horizontal'">
       <el-header height="60px" class="horizontal-header">
@@ -59,9 +59,19 @@
           </el-menu>
 
           <div class="header-right">
+            <a href="https://qm.qq.com/cgi-bin/qm/qr?k=a_y5qjuIfBYZHkhGg4JTZqGjTk3KUI5T&jump_from=webapi&authKey=qJpb8UQWFJcxKBdT/zq9kGBqiMxOm9k3TkfYeAtaVtHAbKbIfxMiGBolmP+aWa5b" target="_blank">
+              <el-tooltip content="加入QQ摸鱼群" placement="bottom">
+                <el-avatar :size="32" src="/src/assets/qq.png" style="margin-right: 16px; background-color: #fff;"/>
+              </el-tooltip>
+            </a>
+            <a href="https://github.com/X-Mars/beenote" target="_blank">
+              <el-tooltip content="访问 火星小刘的 GitHub 仓库" placement="bottom">
+                <el-avatar :size="32" src="/src/assets/github.png" style="margin-right: 16px; background-color: #fff;"/>
+              </el-tooltip>
+            </a>
             <el-dropdown @command="handleCommand">
               <span class="user-dropdown">
-                <el-avatar :size="32" :src="userStore.user?.avatar || '/src/assets/logo.png'" />
+                <el-avatar :size="32" :src="userStore.user?.avatar || '/src/assets/logo.png'" style="background-color: #fff;" />
                 <span class="username">{{ userStore.user?.name || userStore.user?.username }}</span>
                 <el-icon><ArrowDown /></el-icon>
               </span>
@@ -84,14 +94,21 @@
       <div class="sub-header">
         <tag-nav />
       </div>
-      <el-main>
+      <el-main class="main-content">
         <router-view />
       </el-main>
+      <el-footer height="30px" class="footer">
+        <div class="footer-content">
+          <span>© {{ new Date().getFullYear() }} 
+            <a href="https://github.com/X-Mars" target="_blank" class="author-link">火星小刘</a>
+          </span>
+        </div>
+      </el-footer>
     </template>
 
     <!-- 侧边栏导航模式 -->
     <template v-else>
-      <el-aside width="200px">
+      <el-aside width="200px" class="sidebar">
         <div class="logo">
           <img src="@/assets/logo.png" alt="logo" class="logo-img">
           <h1>蜜蜂笔记</h1>
@@ -138,11 +155,21 @@
       </el-aside>
       
       <el-container>
-        <el-header>
+        <el-header class="vertical-header">
           <div class="header-right">
+            <a href="https://qm.qq.com/cgi-bin/qm/qr?k=a_y5qjuIfBYZHkhGg4JTZqGjTk3KUI5T&jump_from=webapi&authKey=qJpb8UQWFJcxKBdT/zq9kGBqiMxOm9k3TkfYeAtaVtHAbKbIfxMiGBolmP+aWa5b" target="_blank">
+              <el-tooltip content="加入QQ摸鱼群" placement="bottom">
+                <el-avatar :size="32" src="/src/assets/qq.png" style="margin-right: 16px; background-color: #fff;"/>
+              </el-tooltip>
+            </a>
+            <a href="https://github.com/X-Mars/beenote" target="_blank">
+              <el-tooltip content="访问 火星小刘的 GitHub 仓库" placement="bottom">
+                <el-avatar :size="32" src="/src/assets/github.png" style="margin-right: 16px; background-color: #fff;" />
+              </el-tooltip>
+            </a>
             <el-dropdown @command="handleCommand">
               <span class="user-dropdown">
-                <el-avatar :size="32" :src="userStore.user?.avatar || '/src/assets/logo.png'" />
+                <el-avatar :size="32" :src="userStore.user?.avatar || '/src/assets/logo.png'" style="background-color: #fff;" />
                 <span class="username">{{ userStore.user?.name || userStore.user?.username }}</span>
                 <el-icon><ArrowDown /></el-icon>
               </span>
@@ -166,6 +193,13 @@
         <el-main>
           <router-view />
         </el-main>
+        <el-footer height="30px" class="footer">
+          <div class="footer-content">
+            <span>© {{ new Date().getFullYear() }} 
+              <a href="https://github.com/X-Mars" target="_blank" class="author-link">火星小刘</a>
+            </span>
+          </div>
+        </el-footer>
       </el-container>
     </template>
   </el-container>
@@ -239,6 +273,10 @@ onMounted(() => {
 <style scoped>
 .layout-container {
   height: 100vh;
+  overflow-x: hidden;
+  overflow-y: hidden;
+  display: flex;
+  flex-direction: column;
 }
 
 .horizontal-header {
@@ -275,6 +313,7 @@ onMounted(() => {
   border-right: 1px solid #dcdfe6;
   display: flex;
   flex-direction: column;
+  overflow-x: hidden;
 }
 
 .menu {
@@ -412,6 +451,157 @@ onMounted(() => {
 
 /* 确保内容区域不被遮挡 */
 .el-main {
-  padding-top: 8px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  height: calc(100vh - 160px);
+  padding: 0;
+  box-sizing: border-box;
+  
+  /* 自定义滚动条样式 */
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+  
+  &::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.1);
+    border-radius: 3px;
+  }
+  
+  &::-webkit-scrollbar-track {
+    background-color: transparent;
+  }
+}
+
+.github-icon {
+  width: 24px;
+  height: 24px;
+  margin-right: 16px;
+  cursor: pointer;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+}
+
+.footer {
+  background-color: #fff;
+  border-top: 1px solid var(--el-border-color-light);
+  margin-top: auto;
+  flex-shrink: 0;  /* 防止 footer 被压缩 */
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  z-index: 1000;
+  left: 0;
+  right: 0;
+}
+
+/* 侧边栏模式下的 footer 样式 */
+.layout-container:not(:has(.horizontal-header)) .footer {
+  width: calc(100% - 200px);
+  margin-left: 200px;
+}
+
+.footer-content {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--el-text-color-secondary);
+  font-size: 14px;
+}
+
+.layout-wrapper {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow-x: hidden;
+  overflow-y: hidden;
+}
+
+.main-content {
+  overflow-x: hidden;
+  overflow-y: auto;
+  height: calc(100vh - 160px);
+  padding: 0;
+  box-sizing: border-box;
+  
+  /* 自定义滚动条样式 */
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+  
+  &::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.1);
+    border-radius: 3px;
+  }
+  
+  &::-webkit-scrollbar-track {
+    background-color: transparent;
+  }
+}
+
+.sidebar {
+  background-color: #fff;
+  border-right: 1px solid var(--el-border-color-light);
+  height: 100vh;
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 1000;
+  overflow-x: hidden;
+  overflow-y: overlay;
+  
+  /* 自定义滚动条样式 */
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+  
+  &::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.1);
+    border-radius: 3px;
+  }
+  
+  &::-webkit-scrollbar-track {
+    background-color: transparent;
+  }
+}
+
+/* 侧边栏模式下的容器样式 */
+.layout-container:not(:has(.horizontal-header)) > .el-container {
+  margin-left: 200px;
+  width: calc(100% - 200px);
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* 侧边栏模式下的头部样式 */
+.vertical-header {
+  background-color: #fff;
+  border-bottom: 1px solid var(--el-border-color-light);
+  position: sticky;
+  top: 0;
+  z-index: 999;
+  flex-shrink: 0;  /* 防止头部被压缩 */
+}
+
+/* 内容容器样式 */
+.el-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+/* 添加作者链接样式 */
+.author-link {
+  color: var(--el-text-color-secondary);
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+.author-link:hover {
+  color: var(--el-color-primary);
 }
 </style> 
