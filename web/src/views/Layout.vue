@@ -71,7 +71,7 @@
             </a>
             <el-dropdown @command="handleCommand">
               <span class="user-dropdown">
-                <el-avatar :size="32" :src="userStore.user?.avatar || '/src/assets/logo.png'" style="background-color: #fff;" />
+                <img width="32px" :src="userStore.user?.avatar || '/src/assets/logo.png'" style="margin-right: 16px; background-color: #fff;"/>
                 <span class="username">{{ userStore.user?.name || userStore.user?.username }}</span>
                 <el-icon><ArrowDown /></el-icon>
               </span>
@@ -169,7 +169,7 @@
             </a>
             <el-dropdown @command="handleCommand">
               <span class="user-dropdown">
-                <el-avatar :size="32" :src="userStore.user?.avatar || '/src/assets/logo.png'" style="background-color: #fff;" />
+                <img width="32px" :src="userStore.user?.avatar || '/src/assets/logo.png'" style="margin-right: 16px; background-color: #fff;"/>
                 <span class="username">{{ userStore.user?.name || userStore.user?.username }}</span>
                 <el-icon><ArrowDown /></el-icon>
               </span>
