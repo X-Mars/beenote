@@ -59,6 +59,11 @@ services:
 docker compose up
 ```
 
+## 浏览器打开
+
+<http://localhost>
+
+
 ## 跟着火星小刘学运维开发
 
 <https://space.bilibili.com/439068477>
