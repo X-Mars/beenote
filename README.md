@@ -24,7 +24,36 @@
 
 ## Docker快速开始
 
+### 创建docker-compose.yaml文件
+
+```yaml
+version: '3'
+
+services:
+  beenote:
+    image: xtlyk/beenote:latest
+    container_name: beenote
+    # pull_policy: never  # 不自动拉取镜像
+    ports:
+      - "80:80"      # 前端端口
+      - "8000:8000"  # 后端端口
+    environment:
+      - TZ=Asia/Shanghai
+      - DEBUG=0
+      - DJANGO_SETTINGS_MODULE=server.settings
+    # volumes:
+    #   - /data/:/app/data/  # 数据库文件持久化，如开启数据库为初始空状态，需手动创建superuser
+    restart: always
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/api/auth/health/?format=json"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+```
+
 ```shell
+# 创建数据持久化目录
 docker compose up
 ```
 
