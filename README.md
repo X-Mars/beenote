@@ -24,7 +24,8 @@
 
 ## Docker快速开始
 
-### 创建docker-compose.yaml文件
+### 创建docker-compose.yaml文件  
+**生产建议打开数据库持久化**
 
 ```yaml
 version: '3'
@@ -53,7 +54,8 @@ services:
 ```
 
 ```shell
-# 创建数据持久化目录
+# 创建数据库持久化目录
+# mkdir /data
 docker compose up
 ```
 
