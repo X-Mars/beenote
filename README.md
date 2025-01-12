@@ -42,6 +42,7 @@ services:
       - TZ=Asia/Shanghai
       - DEBUG=0
       - DJANGO_SETTINGS_MODULE=server.settings
+      - SECRET_KEY=G2afcZy1EZwKIqZ61uV3Nhp1RInSTKZYiVXm5IzF
     # volumes:
     #   - /data/:/app/data/  # 数据库文件持久化，如开启数据库为初始空状态，需手动创建superuser
     restart: always
@@ -62,7 +63,6 @@ docker compose up
 ## 浏览器打开
 
 <http://localhost>
-
 
 ## 跟着火星小刘学运维开发
 

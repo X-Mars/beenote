@@ -20,7 +20,6 @@
             <template #header>
               <div class="card-header">
                 <img src="@/assets/logo.png" class="logo" alt="logo">
-                <h2>用户登录</h2>
               </div>
             </template>
             
@@ -325,8 +324,8 @@ onMounted(() => {
 }
 
 .logo {
-  width: 100px;
-  height: 100px;
+  width: 150px;
+  height: 150px;
   margin-bottom: 16px;
 }
 

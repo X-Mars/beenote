@@ -12,8 +12,9 @@ services:
       - TZ=Asia/Shanghai
       - DEBUG=0
       - DJANGO_SETTINGS_MODULE=server.settings
+      - BEENOTE_SECRET_KEY=G2afcZy1EZwKIqZ61uV3Nhp1RInSTKZYiVXm5IzF
     volumes:
-      - /data/:/app/data/  # 数据库文件持久化
+      - /data/:/app/data/  # 数据库文件持久化，如开启数据库为初始空状态，需手动创建superuser
     restart: always
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8000/api/auth/health/?format=json"]
