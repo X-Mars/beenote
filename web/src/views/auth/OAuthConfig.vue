@@ -458,7 +458,6 @@ const handleAdd = (type: string) => {
 
 // 编辑配置
 const handleEdit = (type: string, row: any) => {
-  console.log('handleEdit', row)
   activeTab.value = type
   currentConfig.value = row
   Object.assign(form.value, row)

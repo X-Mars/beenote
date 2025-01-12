@@ -1,5 +1,7 @@
 import axios from 'axios'
 import { ElMessage } from 'element-plus'
+import router from '@/router'
+import { useUserStore } from '@/store/user'
 
 const request = axios.create({
   baseURL: '/api',
@@ -26,6 +28,20 @@ request.interceptors.response.use(
     return response
   },
   error => {
+    // 处理 token 过期的情况
+    if (error.response?.status === 401 && 
+        error.response?.data?.code === 'token_not_valid') {
+      // 清除用户信息和 token
+      const userStore = useUserStore()
+      userStore.clearUser()
+      
+      // 跳转到登录页
+      router.push('/login')
+      
+      ElMessage.error('登录已过期，请重新登录')
+      return Promise.reject(new Error('登录已过期'))
+    }
+    
     // 处理后端返回的错误信息
     if (error.response?.data) {
       const errors = error.response.data
