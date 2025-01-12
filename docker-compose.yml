@@ -12,6 +12,7 @@ services:
       - TZ=Asia/Shanghai
       - DEBUG=0
       - DJANGO_SETTINGS_MODULE=server.settings
+      - SECRET_KEY=G2afcZy1EZwKIqZ61uV3Nhp1RInSTKZYiVXm5IzF
     volumes:
       - /data/:/app/data/  # 数据库文件持久化
     restart: always
