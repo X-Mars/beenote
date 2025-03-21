@@ -44,7 +44,9 @@ const platformName = computed(() => {
     'wecom': '企业微信',
     'feishu': '飞书',
     'dingtalk': '钉钉',
-    'github': 'GitHub'
+    'github': 'GitHub',
+    'google': 'Google',
+    'gitlab': 'GitLab'
   }
   return stateMap[route.query.state as string] || '未知平台'
 })
@@ -78,6 +80,12 @@ const handleLogin = async () => {
         break
       case 'github':
         response = await userStore.githubLogin(code as string)
+        break
+      case 'google':
+        response = await userStore.googleLogin(code as string)
+        break
+      case 'gitlab':
+        response = await userStore.gitlabLogin(code as string)
         break
       default:
         throw new Error('未知的登录类型')

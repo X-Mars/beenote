@@ -9,7 +9,7 @@ from django.shortcuts import redirect
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from ..models import WeComConfig, FeiShuConfig, DingTalkConfig, GitHubConfig
+from ..models import WeComConfig, FeiShuConfig, DingTalkConfig, GitHubConfig, GoogleConfig, GitLabConfig
 from urllib.parse import quote
 import time
 import hmac
@@ -30,12 +30,16 @@ class LoginQRCodeView(APIView):
             feishu_config = FeiShuConfig.objects.filter(enabled=True).first()
             dingtalk_config = DingTalkConfig.objects.filter(enabled=True).first()
             github_config = GitHubConfig.objects.filter(enabled=True).first()
+            google_config = GoogleConfig.objects.filter(enabled=True).first()
+            gitlab_config = GitLabConfig.objects.filter(enabled=True).first()
 
             result = {
                 'wecom_url': None,
                 'feishu_url': None,
                 'dingtalk_url': None,
-                'github_url': None
+                'github_url': None,
+                'google_url': None,
+                'gitlab_url': None
             }
 
             # 生成企业微信登录二维码URL
@@ -86,6 +90,36 @@ class LoginQRCodeView(APIView):
                     '&state=github'
                 )
                 result['github_url'] = github_url
+
+            # 生成Google登录URL
+            if google_config:
+                google_url = (
+                    'https://accounts.google.com/o/oauth2/v2/auth'
+                    f'?client_id={google_config.client_id}'
+                    '&response_type=code'
+                    f'&redirect_uri={google_config.redirect_uri}'
+                    '&scope=openid email profile'
+                    '&access_type=offline'
+                    '&prompt=consent'
+                    '&state=google'
+                )
+                result['google_url'] = google_url
+
+            # 生成GitLab登录URL
+            if gitlab_config:
+                gitlab_server = gitlab_config.gitlab_server or 'https://gitlab.com'
+                # 确保 gitlab_server 没有尾随斜杠
+                if gitlab_server.endswith('/'):
+                    gitlab_server = gitlab_server[:-1]
+                gitlab_url = (
+                    f'{gitlab_server}/oauth/authorize'
+                    f'?client_id={gitlab_config.client_id}'
+                    '&response_type=code'
+                    f'&redirect_uri={gitlab_config.redirect_uri}'
+                    '&scope=read_user'
+                    '&state=gitlab'
+                )
+                result['gitlab_url'] = gitlab_url
 
             return Response(result)
 

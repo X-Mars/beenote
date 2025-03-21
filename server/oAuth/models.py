@@ -279,3 +279,110 @@ class GitHubUser(models.Model):
 
     def __str__(self):
         return f'GitHub用户 - {self.name or self.login}'
+
+
+class OAuthConfig(models.Model):
+    provider = models.CharField(max_length=50)  # 'google', 'dingtalk', 'feishu', 'wechat'
+    client_id = models.CharField(max_length=255)
+    client_secret = models.CharField(max_length=255)
+    redirect_uri = models.CharField(max_length=255)
+    is_enabled = models.BooleanField(default=True)
+    
+    class Meta:
+        unique_together = ('provider',)
+
+    def __str__(self):
+        return f"{self.provider} OAuth Config"
+
+
+class GoogleConfig(models.Model):
+    """Google OAuth配置"""
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    client_id = models.CharField('Client ID', max_length=100)
+    client_secret = models.CharField('Client Secret', max_length=100)
+    redirect_uri = models.URLField('回调域名', max_length=500, null=True, blank=True)
+    enabled = models.BooleanField('是否启用', default=True)
+    created_at = models.DateTimeField('创建时间', auto_now_add=True)
+    updated_at = models.DateTimeField('更新时间', auto_now=True)
+
+    class Meta:
+        verbose_name = 'Google配置'
+        verbose_name_plural = verbose_name
+
+    def __str__(self):
+        return f'Google配置 - {self.client_id}'
+
+
+class GoogleUser(models.Model):
+    """Google用户信息"""
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    user = models.OneToOneField(
+        'User',
+        on_delete=models.CASCADE,
+        related_name='google_user',
+        verbose_name='关联用户',
+        null=True, blank=True
+    )
+    google_id = models.CharField('Google ID', max_length=100, unique=True)
+    email = models.EmailField('邮箱', max_length=100)
+    name = models.CharField('姓名', max_length=100, null=True, blank=True)
+    given_name = models.CharField('名', max_length=100, null=True, blank=True)
+    family_name = models.CharField('姓', max_length=100, null=True, blank=True)
+    picture = models.URLField('头像URL', null=True, blank=True)
+    locale = models.CharField('语言', max_length=10, null=True, blank=True)
+    created_at = models.DateTimeField('创建时间', auto_now_add=True)
+    updated_at = models.DateTimeField('更新时间', auto_now=True)
+
+    class Meta:
+        verbose_name = 'Google用户'
+        verbose_name_plural = verbose_name
+
+    def __str__(self):
+        return f'Google用户 - {self.name or self.email}'
+
+
+class GitLabConfig(models.Model):
+    """GitLab 配置"""
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    client_id = models.CharField(max_length=255, verbose_name='Client ID')
+    client_secret = models.CharField(max_length=255, verbose_name='Client Secret')
+    redirect_uri = models.CharField(max_length=255, verbose_name='重定向URI', blank=True)
+    gitlab_server = models.CharField(max_length=255, verbose_name='GitLab 服务器地址', default='https://gitlab.com')
+    enabled = models.BooleanField(default=True, verbose_name='是否启用')
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name='创建时间')
+    updated_at = models.DateTimeField(auto_now=True, verbose_name='更新时间')
+
+    class Meta:
+        verbose_name = 'GitLab 配置'
+        verbose_name_plural = verbose_name
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return f'GitLab 配置 {self.id}'
+
+
+class GitLabUser(models.Model):
+    """GitLab用户信息"""
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    user = models.OneToOneField(
+        'User',
+        on_delete=models.CASCADE,
+        related_name='gitlab_user',
+        verbose_name='关联用户',
+        null=True, blank=True
+    )
+    gitlab_id = models.CharField('GitLab ID', max_length=100, unique=True)
+    username = models.CharField('用户名', max_length=100)
+    email = models.EmailField('邮箱', max_length=100, null=True, blank=True)
+    name = models.CharField('姓名', max_length=100, null=True, blank=True)
+    avatar_url = models.URLField('头像URL', null=True, blank=True)
+    web_url = models.URLField('个人主页', null=True, blank=True)
+    created_at = models.DateTimeField('创建时间', auto_now_add=True)
+    updated_at = models.DateTimeField('更新时间', auto_now=True)
+
+    class Meta:
+        verbose_name = 'GitLab用户'
+        verbose_name_plural = verbose_name
+
+    def __str__(self):
+        return f'GitLab用户 - {self.name or self.username}'

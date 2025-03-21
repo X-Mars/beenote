@@ -92,6 +92,16 @@
                       <img src="@/assets/github.png" alt="GitHub">
                     </div>
                   </el-tooltip>
+                  <el-tooltip content="Google登录" placement="top">
+                    <div class="login-icon" @click="handleThirdPartyLogin(qrcodeUrls.google_url)">
+                      <img src="@/assets/google.png" alt="Google">
+                    </div>
+                  </el-tooltip>
+                  <el-tooltip content="GitLab登录" placement="top">
+                    <div class="login-icon" @click="handleThirdPartyLogin(qrcodeUrls.gitlab_url)">
+                      <img src="@/assets/gitlab.png" alt="GitLab">
+                    </div>
+                  </el-tooltip>
                 </div>
               </div>
             </el-form>
@@ -117,11 +127,20 @@ const userStore = useUserStore()
 const loginFormRef = ref<FormInstance>()
 const loading = ref(false)
 const rememberMe = ref(false)
-const qrcodeUrls = ref({
+const qrcodeUrls = ref<{
+  wecom_url: string | null
+  feishu_url: string | null
+  dingtalk_url: string | null
+  github_url: string | null
+  google_url: string | null
+  gitlab_url: string | null
+}>({
   wecom_url: null,
   feishu_url: null,
   dingtalk_url: null,
-  github_url: null
+  github_url: null,
+  google_url: null,
+  gitlab_url: null
 })
 
 const loginForm = reactive({

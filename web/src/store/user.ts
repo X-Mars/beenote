@@ -128,5 +128,29 @@ export const useUserStore = defineStore('user', {
         throw error
       }
     },
+
+    async googleLogin(code: string) {
+      try {
+        const response = await userApi.googleLogin(code)
+        this.setToken(response.data.access)
+        this.setRefreshToken(response.data.refresh)
+        this.setUser(response.data.user)
+        return response
+      } catch (error) {
+        throw error
+      }
+    },
+
+    async gitlabLogin(code: string) {
+      try {
+        const response = await userApi.gitlabLogin(code)
+        this.setToken(response.data.access)
+        this.setRefreshToken(response.data.refresh)
+        this.setUser(response.data.user)
+        return response
+      } catch (error) {
+        throw error
+      }
+    }
   }
 }) 

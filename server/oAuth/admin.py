@@ -4,7 +4,8 @@ from django.contrib.auth.models import Group
 from .models import (
     User, WeComConfig, FeiShuConfig, 
     DingTalkConfig, WeComUser, FeiShuUser, DingTalkUser,
-    GitHubConfig, GitHubUser
+    GitHubConfig, GitHubUser, GoogleConfig, GoogleUser,
+    GitLabConfig, GitLabUser
 )
 
 
@@ -186,6 +187,76 @@ class GitHubUserAdmin(admin.ModelAdmin):
         }),
         ('基本信息', {
             'fields': ('name', 'email', 'avatar_url', 'bio', 'location')
+        }),
+        ('时间信息', {
+            'fields': ('created_at', 'updated_at')
+        }),
+    )
+
+
+@admin.register(GoogleConfig)
+class GoogleConfigAdmin(admin.ModelAdmin):
+    list_display = ('client_id', 'client_secret', 'redirect_uri', 'enabled', 'created_at', 'updated_at')
+    list_filter = ('enabled',)
+    search_fields = ('client_id',)
+    readonly_fields = ('created_at', 'updated_at')
+    fieldsets = (
+        (None, {
+            'fields': ('client_id', 'client_secret', 'redirect_uri', 'enabled')
+        }),
+        ('时间信息', {
+            'fields': ('created_at', 'updated_at')
+        }),
+    )
+
+
+@admin.register(GoogleUser)
+class GoogleUserAdmin(admin.ModelAdmin):
+    list_display = ('name', 'user', 'email', 'google_id')
+    search_fields = ('name', 'email', 'user__username', 'google_id')
+    readonly_fields = ('created_at', 'updated_at')
+    fieldsets = (
+        (None, {
+            'fields': ('user', 'google_id', 'email')
+        }),
+        ('基本信息', {
+            'fields': ('name', 'given_name', 'family_name', 'picture', 'locale')
+        }),
+        ('时间信息', {
+            'fields': ('created_at', 'updated_at')
+        }),
+    )
+
+
+@admin.register(GitLabConfig)
+class GitLabConfigAdmin(admin.ModelAdmin):
+    """GitLab 配置管理"""
+    list_display = ('client_id', 'gitlab_server', 'redirect_uri', 'enabled', 'created_at')
+    list_filter = ('enabled',)
+    search_fields = ('client_id', 'gitlab_server')
+    fieldsets = (
+        ('基本信息', {
+            'fields': ('client_id', 'client_secret', 'gitlab_server', 'redirect_uri', 'enabled')
+        }),
+        ('时间信息', {
+            'fields': ('created_at', 'updated_at'),
+            'classes': ('collapse',)
+        }),
+    )
+    readonly_fields = ('created_at', 'updated_at')
+
+
+@admin.register(GitLabUser)
+class GitLabUserAdmin(admin.ModelAdmin):
+    list_display = ('name', 'user', 'username', 'email', 'gitlab_id')
+    search_fields = ('name', 'username', 'email', 'user__username', 'gitlab_id')
+    readonly_fields = ('created_at', 'updated_at')
+    fieldsets = (
+        (None, {
+            'fields': ('user', 'gitlab_id', 'username')
+        }),
+        ('基本信息', {
+            'fields': ('name', 'email', 'avatar_url', 'web_url')
         }),
         ('时间信息', {
             'fields': ('created_at', 'updated_at')

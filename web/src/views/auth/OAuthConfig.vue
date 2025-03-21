@@ -230,13 +230,128 @@
           </el-table-column>
         </el-table>
       </el-tab-pane>
+
+      <!-- Google配置 -->
+      <el-tab-pane label="Google配置" name="google">
+        <div class="config-tips">
+          <p>配置说明：</p>
+          <p>1. 请先前往 <el-link href="https://console.cloud.google.com/apis/credentials" type="primary" target="_blank">Google Cloud Console</el-link> 获取相关配置</p>
+          <p>2. 回调域名请填写：{{ baseUrl }}/oauth/callback</p>
+          <p>3. 权限范围请选择：openid, email, profile</p>
+        </div>
+
+        <div class="tab-header">
+          <el-button 
+            type="primary" 
+            @click="handleAdd('google')"
+            :disabled="googleConfigs.length >= 1"
+          >
+            <el-icon><Plus /></el-icon>新建配置
+          </el-button>
+        </div>
+        
+        <el-table :data="googleConfigs" v-loading="loading.google">
+          <el-table-column prop="client_id" label="Client ID" width="300" />
+          <el-table-column prop="client_secret" label="Client Secret" show-overflow-tooltip />
+          <el-table-column prop="redirect_uri" label="回调域名" show-overflow-tooltip>
+            <template #default="{ row }">
+              <el-link 
+                type="primary" 
+                :href="row.redirect_uri" 
+                target="_blank"
+                :underline="false"
+              >
+                {{ row.redirect_uri }}
+              </el-link>
+            </template>
+          </el-table-column>
+          <el-table-column prop="enabled" label="状态" width="100">
+            <template #default="{ row }">
+              <el-switch
+                v-model="row.enabled"
+                @change="handleStatusChange('google', row)"
+              />
+            </template>
+          </el-table-column>
+          <el-table-column label="操作" width="200" fixed="right">
+            <template #default="{ row }">
+              <el-button-group>
+                <el-button type="primary" :icon="Edit" @click="handleEdit('google', row)">
+                  编辑
+                </el-button>
+                <el-button type="danger" :icon="Delete" @click="handleDelete('google', row)">
+                  删除
+                </el-button>
+              </el-button-group>
+            </template>
+          </el-table-column>
+        </el-table>
+      </el-tab-pane>
+
+      <!-- GitLab配置 -->
+      <el-tab-pane label="GitLab配置" name="gitlab">
+        <div class="config-tips">
+          <p>配置说明：</p>
+          <p>1. 请先前往 GitLab 实例的应用设置页面获取相关配置（对于公共 GitLab，地址为：<el-link href="https://gitlab.com/-/profile/applications" type="primary" target="_blank">GitLab 应用设置</el-link>）</p>
+          <p>2. 回调域名请填写：{{ baseUrl }}/oauth/callback</p>
+          <p>3. 权限范围请选择：read_user</p>
+          <p>4. 对于私有化部署的 GitLab，请填写完整的 GitLab 服务器地址（例如：https://gitlab.example.com）</p>
+        </div>
+
+        <div class="tab-header">
+          <el-button 
+            type="primary" 
+            @click="handleAdd('gitlab')"
+            :disabled="gitlabConfigs.length >= 1"
+          >
+            <el-icon><Plus /></el-icon>新建配置
+          </el-button>
+        </div>
+        
+        <el-table :data="gitlabConfigs" v-loading="loading.gitlab">
+          <el-table-column prop="client_id" label="Client ID" width="300" />
+          <el-table-column prop="client_secret" label="Client Secret" show-overflow-tooltip />
+          <el-table-column prop="redirect_uri" label="回调域名" show-overflow-tooltip>
+            <template #default="{ row }">
+              <el-link 
+                type="primary" 
+                :href="row.redirect_uri" 
+                target="_blank"
+                :underline="false"
+              >
+                {{ row.redirect_uri }}
+              </el-link>
+            </template>
+          </el-table-column>
+          <el-table-column prop="enabled" label="状态" width="100">
+            <template #default="{ row }">
+              <el-switch
+                v-model="row.enabled"
+                @change="handleStatusChange('gitlab', row)"
+              />
+            </template>
+          </el-table-column>
+          <el-table-column label="操作" width="200" fixed="right">
+            <template #default="{ row }">
+              <el-button-group>
+                <el-button type="primary" :icon="Edit" @click="handleEdit('gitlab', row)">
+                  编辑
+                </el-button>
+                <el-button type="danger" :icon="Delete" @click="handleDelete('gitlab', row)">
+                  删除
+                </el-button>
+              </el-button-group>
+            </template>
+          </el-table-column>
+        </el-table>
+      </el-tab-pane>
     </el-tabs>
 
     <!-- 配置表单对话框 -->
     <el-dialog
       v-model="dialogVisible"
       :title="formTitle"
-      width="500px"
+      width="600px"
     >
       <el-form
         ref="formRef"
@@ -314,6 +429,44 @@
           </el-form-item>
         </template>
 
+        <template v-if="activeTab === 'google'">
+          <el-form-item label="Client ID" prop="client_id">
+            <el-input v-model="form.client_id" />
+          </el-form-item>
+          <el-form-item label="Client Secret" prop="client_secret">
+            <el-input v-model="form.client_secret" type="password" show-password />
+          </el-form-item>
+          <el-form-item label="回调域名" prop="redirect_uri">
+            <el-input 
+              v-model="form.redirect_uri" 
+              placeholder="留空将自动使用当前域名"
+              @blur="handleRedirectUriBlur"
+            />
+          </el-form-item>
+        </template>
+
+        <template v-if="activeTab === 'gitlab'">
+          <el-form-item label="GitLab 地址" prop="gitlab_server">
+            <el-input
+              v-model="form.gitlab_server"
+              placeholder="例如：https://gitlab.example.com"
+            />
+          </el-form-item>
+          <el-form-item label="Client ID" prop="client_id">
+            <el-input v-model="form.client_id" />
+          </el-form-item>
+          <el-form-item label="Client Secret" prop="client_secret">
+            <el-input v-model="form.client_secret" type="password" show-password />
+          </el-form-item>
+          <el-form-item label="回调域名" prop="redirect_uri">
+            <el-input 
+              v-model="form.redirect_uri" 
+              placeholder="留空将自动使用当前域名"
+              @blur="handleRedirectUriBlur"
+            />
+          </el-form-item>
+        </template>
+
         <el-form-item label="状态" prop="enabled">
           <el-switch v-model="form.enabled" />
         </el-form-item>
@@ -334,7 +487,7 @@ import { Plus, Edit, Delete } from '@element-plus/icons-vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import type { FormInstance } from 'element-plus'
 import { configApi } from '@/api/config'
-import type { WeComConfig, FeiShuConfig, DingTalkConfig, GitHubConfig } from '@/api/config'
+import type { WeComConfig, FeiShuConfig, DingTalkConfig, GitHubConfig, GoogleConfig, GitLabConfig } from '@/api/config'
 import { useRouter } from 'vue-router'
 import { useUserStore } from '@/store/user'
 
@@ -357,13 +510,17 @@ const wecomConfigs = ref<WeComConfig[]>([])
 const feishuConfigs = ref<FeiShuConfig[]>([])
 const dingtalkConfigs = ref<DingTalkConfig[]>([])
 const githubConfigs = ref<GitHubConfig[]>([])
+const googleConfigs = ref<GoogleConfig[]>([])
+const gitlabConfigs = ref<GitLabConfig[]>([])
 
 const loading = ref({
   wecom: false,
   feishu: false,
   dingtalk: false,
-  github: false
-})
+  github: false,
+  google: false,
+  gitlab: false
+} as const)
 
 const form = ref<any>({
   corp_id: '',
@@ -374,6 +531,7 @@ const form = ref<any>({
   client_id: '',
   client_secret: '',
   redirect_uri: '',
+  gitlab_server: 'https://gitlab.com',
   enabled: true
 })
 
@@ -384,7 +542,9 @@ const formTitle = computed(() => {
     wecom: '企业微信',
     feishu: '飞书',
     dingtalk: '钉钉',
-    github: 'GitHub'
+    github: 'GitHub',
+    google: 'Google',
+    gitlab: 'GitLab'
   }[activeTab.value]
   return `${action}${type}配置`
 })
@@ -403,30 +563,44 @@ const rules = {
 // 加载配置数据
 const fetchConfigs = async () => {
   try {
-    loading.value[activeTab.value] = true
+    loading.value[activeTab.value as keyof typeof loading.value] = true
     switch (activeTab.value) {
-      case 'wecom':
+      case 'wecom': {
         const wecomRes = await configApi.getWeComConfigs()
         wecomConfigs.value = wecomRes.data
         break
-      case 'feishu':
+      }
+      case 'feishu': {
         const feishuRes = await configApi.getFeiShuConfigs()
         feishuConfigs.value = feishuRes.data
         break
-      case 'dingtalk':
+      }
+      case 'dingtalk': {
         const dingtalkRes = await configApi.getDingTalkConfigs()
         dingtalkConfigs.value = dingtalkRes.data
         break
-      case 'github':
+      }
+      case 'github': {
         const githubRes = await configApi.getGitHubConfigs()
         githubConfigs.value = githubRes.data
         break
+      }
+      case 'google': {
+        const googleRes = await configApi.getGoogleConfigs()
+        googleConfigs.value = googleRes.data
+        break
+      }
+      case 'gitlab': {
+        const gitlabRes = await configApi.getGitLabConfigs()
+        gitlabConfigs.value = gitlabRes.data
+        break
+      }
     }
   } catch (error) {
     console.error(error)
     ElMessage.error('获取配置列表失败')
   } finally {
-    loading.value[activeTab.value] = false
+    loading.value[activeTab.value as keyof typeof loading.value] = false
   }
 }
 
@@ -441,6 +615,7 @@ const resetForm = () => {
     client_id: '',
     client_secret: '',
     redirect_uri: '',
+    gitlab_server: 'https://gitlab.com',
     enabled: true
   }
   currentConfig.value = null
@@ -486,6 +661,12 @@ const handleDelete = async (type: string, row: any) => {
       case 'github':
         await configApi.deleteGitHubConfig(row.id)
         break
+      case 'google':
+        await configApi.deleteGoogleConfig(row.id)
+        break
+      case 'gitlab':
+        await configApi.deleteGitLabConfig(row.id)
+        break
     }
 
     ElMessage.success('删除成功')
@@ -514,6 +695,12 @@ const handleStatusChange = async (type: string, row: any) => {
         break
       case 'github':
         await configApi.updateGitHubConfig(row.id, data)
+        break
+      case 'google':
+        await configApi.updateGoogleConfig(row.id, data)
+        break
+      case 'gitlab':
+        await configApi.updateGitLabConfig(row.id, data)
         break
     }
     ElMessage.success('更新状态成功')
@@ -548,6 +735,12 @@ const handleSubmit = async () => {
             case 'github':
               await configApi.updateGitHubConfig(currentConfig.value.id, data)
               break
+            case 'google':
+              await configApi.updateGoogleConfig(currentConfig.value.id, data)
+              break
+            case 'gitlab':
+              await configApi.updateGitLabConfig(currentConfig.value.id, data)
+              break
           }
           ElMessage.success('更新成功')
         } else {
@@ -564,6 +757,12 @@ const handleSubmit = async () => {
               break
             case 'github':
               await configApi.createGitHubConfig(data)
+              break
+            case 'google':
+              await configApi.createGoogleConfig(data)
+              break
+            case 'gitlab':
+              await configApi.createGitLabConfig(data)
               break
           }
           ElMessage.success('创建成功')

@@ -1,16 +1,16 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
-from django.contrib.auth import authenticate
-from .serializers import UserSerializer, LoginSerializer, GroupSerializer, WeComConfigSerializer, FeiShuConfigSerializer, DingTalkConfigSerializer, GitHubConfigSerializer
+from django.contrib.auth import authenticate, get_user_model
+from .serializers import UserSerializer, LoginSerializer, GroupSerializer, WeComConfigSerializer, FeiShuConfigSerializer, DingTalkConfigSerializer, GitHubConfigSerializer, GoogleConfigSerializer, GitLabConfigSerializer
 from django.utils import timezone
 from datetime import timedelta
-from rest_framework.decorators import api_view
-from .models import User, WeComConfig, FeiShuConfig, DingTalkConfig, GitHubConfig
+from rest_framework.decorators import api_view, permission_classes
+from .models import User, WeComConfig, FeiShuConfig, DingTalkConfig, GitHubConfig, GoogleConfig, GitLabConfig
 from django.contrib.auth.models import Group
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework import viewsets
 from rest_framework.permissions import IsAdminUser
 from django.contrib.auth.hashers import make_password
@@ -18,9 +18,15 @@ from django.db.models import Q
 from note.models import NoteGroup  # 导入笔记分组模型
 from rest_framework.exceptions import PermissionDenied
 from rest_framework.decorators import action
-from rest_framework.decorators import permission_classes
-from rest_framework.permissions import AllowAny
+import requests as http_requests
+import json
 
+User = get_user_model()
+
+GOOGLE_SCOPES = [
+    'https://www.googleapis.com/auth/userinfo.profile',
+    'https://www.googleapis.com/auth/userinfo.email'
+]
 
 class LoginView(APIView):
     permission_classes = []
@@ -287,3 +293,41 @@ class GitHubConfigViewSet(viewsets.ModelViewSet):
 def health_check(request):
     """健康检查接口"""
     return Response("ok", status=status.HTTP_200_OK)
+
+class GoogleConfigViewSet(viewsets.ModelViewSet):
+    queryset = GoogleConfig.objects.all()
+    serializer_class = GoogleConfigSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        if not self.request.user.role in ['admin', 'superuser']:
+            raise PermissionDenied("只有管理员可以管理配置")
+        return super().get_queryset()
+
+    @action(detail=False, methods=['get'])
+    def current(self):
+        """获取当前启用的配置"""
+        config = GoogleConfig.objects.filter(enabled=True).first()
+        if config:
+            serializer = self.get_serializer(config)
+            return Response(serializer.data)
+        return Response(None)
+
+class GitLabConfigViewSet(viewsets.ModelViewSet):
+    queryset = GitLabConfig.objects.all()
+    serializer_class = GitLabConfigSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        if not self.request.user.role in ['admin', 'superuser']:
+            raise PermissionDenied("只有管理员可以管理配置")
+        return super().get_queryset()
+
+    @action(detail=False, methods=['get'])
+    def current(self):
+        """获取当前启用的配置"""
+        config = GitLabConfig.objects.filter(enabled=True).first()
+        if config:
+            serializer = self.get_serializer(config)
+            return Response(serializer.data)
+        return Response(None)

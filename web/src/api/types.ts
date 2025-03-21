@@ -68,4 +68,6 @@ export interface OAuthUrls {
   feishu_url: string | null
   dingtalk_url: string | null
   github_url: string | null
+  google_url: string | null
+  gitlab_url: string | null
 } 
