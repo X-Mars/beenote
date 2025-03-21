@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from django.contrib.auth.models import Group
-from .models import User, NoteGroup, WeComConfig, FeiShuConfig, DingTalkConfig, GitHubConfig, GitHubUser
+from .models import User, NoteGroup, WeComConfig, FeiShuConfig, DingTalkConfig, GitHubConfig, GitHubUser, OAuthConfig, GoogleConfig, GoogleUser, GitLabConfig, GitLabUser
 from django.contrib.auth.hashers import make_password
 
 class UserSerializer(serializers.ModelSerializer):
@@ -80,3 +80,25 @@ class GitHubUserSerializer(serializers.ModelSerializer):
         model = GitHubUser
         fields = ['id', 'github_id', 'login', 'name', 'email', 'avatar_url', 'created_at', 'updated_at']
         read_only_fields = ['created_at', 'updated_at']
+
+class GoogleConfigSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = GoogleConfig
+        fields = ['id', 'client_id', 'client_secret', 'redirect_uri', 'enabled', 'created_at', 'updated_at']
+        read_only_fields = ['created_at', 'updated_at']
+
+class GoogleUserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = GoogleUser
+        fields = ['id', 'google_id', 'email', 'name', 'given_name', 'family_name', 'picture', 'created_at', 'updated_at']
+        read_only_fields = ['created_at', 'updated_at']
+
+class GitLabConfigSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = GitLabConfig
+        fields = '__all__'
+
+class GitLabUserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = GitLabUser
+        fields = '__all__'
