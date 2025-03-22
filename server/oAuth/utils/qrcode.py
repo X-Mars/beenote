@@ -9,7 +9,7 @@ from django.shortcuts import redirect
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from ..models import WeComConfig, FeiShuConfig, DingTalkConfig, GitHubConfig, GoogleConfig, GitLabConfig
+from ..models import WeComConfig, FeiShuConfig, DingTalkConfig, GitHubConfig, GoogleConfig, GitLabConfig, GiteeConfig
 from urllib.parse import quote
 import time
 import hmac
@@ -32,6 +32,7 @@ class LoginQRCodeView(APIView):
             github_config = GitHubConfig.objects.filter(enabled=True).first()
             google_config = GoogleConfig.objects.filter(enabled=True).first()
             gitlab_config = GitLabConfig.objects.filter(enabled=True).first()
+            gitee_config = GiteeConfig.objects.filter(enabled=True).first()
 
             result = {
                 'wecom_url': None,
@@ -39,7 +40,8 @@ class LoginQRCodeView(APIView):
                 'dingtalk_url': None,
                 'github_url': None,
                 'google_url': None,
-                'gitlab_url': None
+                'gitlab_url': None,
+                'gitee_url': None
             }
 
             # 生成企业微信登录二维码URL
@@ -120,6 +122,17 @@ class LoginQRCodeView(APIView):
                     '&state=gitlab'
                 )
                 result['gitlab_url'] = gitlab_url
+
+            # Gitee 登录URL
+            if gitee_config:
+                gitee_url = (
+                    'https://gitee.com/oauth/authorize'
+                    f'?client_id={gitee_config.client_id}'
+                    '&response_type=code'
+                    f'&redirect_uri={gitee_config.redirect_uri}'
+                    '&state=gitee'
+                )
+                result['gitee_url'] = gitee_url
 
             return Response(result)
 

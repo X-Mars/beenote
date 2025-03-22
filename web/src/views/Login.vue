@@ -102,6 +102,11 @@
                       <img src="@/assets/gitlab.png" alt="GitLab">
                     </div>
                   </el-tooltip>
+                  <el-tooltip content="Gitee登录" placement="top">
+                    <div class="login-icon" @click="handleThirdPartyLogin(qrcodeUrls.gitee_url)">
+                      <img src="@/assets/gitee.png" alt="Gitee">
+                    </div>
+                  </el-tooltip>
                 </div>
               </div>
             </el-form>
@@ -134,13 +139,15 @@ const qrcodeUrls = ref<{
   github_url: string | null
   google_url: string | null
   gitlab_url: string | null
+  gitee_url: string | null
 }>({
   wecom_url: null,
   feishu_url: null,
   dingtalk_url: null,
   github_url: null,
   google_url: null,
-  gitlab_url: null
+  gitlab_url: null,
+  gitee_url: null
 })
 
 const loginForm = reactive({

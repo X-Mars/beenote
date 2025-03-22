@@ -5,7 +5,7 @@ from .models import (
     User, WeComConfig, FeiShuConfig, 
     DingTalkConfig, WeComUser, FeiShuUser, DingTalkUser,
     GitHubConfig, GitHubUser, GoogleConfig, GoogleUser,
-    GitLabConfig, GitLabUser
+    GitLabConfig, GitLabUser, GiteeConfig, GiteeUser
 )
 
 
@@ -262,6 +262,42 @@ class GitLabUserAdmin(admin.ModelAdmin):
             'fields': ('created_at', 'updated_at')
         }),
     )
+
+
+@admin.register(GiteeConfig)
+class GiteeConfigAdmin(admin.ModelAdmin):
+    """Gitee 配置管理"""
+    list_display = ('client_id', 'redirect_uri', 'enabled', 'created_at')
+    list_filter = ('enabled',)
+    search_fields = ('client_id',)
+    fieldsets = (
+        ('基本信息', {
+            'fields': ('client_id', 'client_secret', 'redirect_uri', 'enabled')
+        }),
+        ('时间信息', {
+            'fields': ('created_at', 'updated_at'),
+            'classes': ('collapse',)
+        }),
+    )
+    readonly_fields = ('created_at', 'updated_at')
+
+
+@admin.register(GiteeUser)
+class GiteeUserAdmin(admin.ModelAdmin):
+    """Gitee 用户管理"""
+    list_display = ('name', 'username', 'email', 'gitee_id', 'created_at')
+    list_filter = ('created_at',)
+    search_fields = ('name', 'username', 'email', 'gitee_id')
+    fieldsets = (
+        ('基本信息', {
+            'fields': ('user', 'gitee_id', 'name', 'username', 'email', 'avatar_url')
+        }),
+        ('时间信息', {
+            'fields': ('created_at', 'updated_at'),
+            'classes': ('collapse',)
+        }),
+    )
+    readonly_fields = ('created_at', 'updated_at')
 
 
 admin.site.register(User, CustomUserAdmin)

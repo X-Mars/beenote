@@ -151,6 +151,18 @@ export const useUserStore = defineStore('user', {
       } catch (error) {
         throw error
       }
+    },
+
+    async giteeLogin(code: string) {
+      try {
+        const response = await userApi.giteeLogin(code)
+        this.setToken(response.data.access)
+        this.setRefreshToken(response.data.refresh)
+        this.setUser(response.data.user)
+        return response
+      } catch (error) {
+        throw error
+      }
     }
   }
 }) 

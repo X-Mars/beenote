@@ -23,6 +23,17 @@ export interface GitLabUser {
   updated_at: string
 }
 
+export interface GiteeUser {
+  id: string
+  name: string
+  username: string
+  email: string
+  avatar_url: string
+  gitee_id: string
+  created_at: string
+  updated_at: string
+}
+
 export const userApi = {
   // 用户登录
   login: (data: LoginParams) => {
@@ -64,6 +75,11 @@ export const userApi = {
     return request.post<LoginResponse>('/auth/gitlab/login/', { code })
   },
 
+  // Gitee登录
+  giteeLogin: (code: string) => {
+    return request.post<LoginResponse>('/auth/gitee/login/', { code })
+  },
+
   // 获取第三方登录二维码
   getLoginQRCode: () => {
     return request.get<{
@@ -73,31 +89,7 @@ export const userApi = {
       github_url: string | null
       google_url: string | null
       gitlab_url: string | null
+      gitee_url: string | null
     }>('/auth/login/qrcode/')
   }
 }
-
-// GitLab用户相关接口
-export const getGitLabUsers = () => {
-  return request.get<GitLabUser[]>('/auth/gitlab-users/')
-}
-
-export const getGitLabUser = (id: string) => {
-  return request.get<GitLabUser>(`/auth/gitlab-users/${id}/`)
-}
-
-export const createGitLabUser = (data: Partial<GitLabUser>) => {
-  return request.post<GitLabUser>('/auth/gitlab-users/', data)
-}
-
-export const updateGitLabUser = (id: string, data: Partial<GitLabUser>) => {
-  return request.patch<GitLabUser>(`/auth/gitlab-users/${id}/`, data)
-}
-
-export const deleteGitLabUser = (id: string) => {
-  return request.delete(`/auth/gitlab-users/${id}/`)
-}
-
-export const getCurrentGitLabUser = () => {
-  return request.get<GitLabUser>('/auth/gitlab-users/current/')
-} 

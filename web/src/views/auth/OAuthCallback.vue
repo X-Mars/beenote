@@ -46,7 +46,8 @@ const platformName = computed(() => {
     'dingtalk': '钉钉',
     'github': 'GitHub',
     'google': 'Google',
-    'gitlab': 'GitLab'
+    'gitlab': 'GitLab',
+    'gitee': 'Gitee'
   }
   return stateMap[route.query.state as string] || '未知平台'
 })
@@ -86,6 +87,9 @@ const handleLogin = async () => {
         break
       case 'gitlab':
         response = await userStore.gitlabLogin(code as string)
+        break
+      case 'gitee':
+        response = await userStore.giteeLogin(code as string)
         break
       default:
         throw new Error('未知的登录类型')

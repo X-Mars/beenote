@@ -4,11 +4,11 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth import authenticate, get_user_model
-from .serializers import UserSerializer, LoginSerializer, GroupSerializer, WeComConfigSerializer, FeiShuConfigSerializer, DingTalkConfigSerializer, GitHubConfigSerializer, GoogleConfigSerializer, GitLabConfigSerializer
+from .serializers import UserSerializer, LoginSerializer, GroupSerializer, WeComConfigSerializer, FeiShuConfigSerializer, DingTalkConfigSerializer, GitHubConfigSerializer, GoogleConfigSerializer, GitLabConfigSerializer, GiteeConfigSerializer
 from django.utils import timezone
 from datetime import timedelta
 from rest_framework.decorators import api_view, permission_classes
-from .models import User, WeComConfig, FeiShuConfig, DingTalkConfig, GitHubConfig, GoogleConfig, GitLabConfig
+from .models import User, WeComConfig, FeiShuConfig, DingTalkConfig, GitHubConfig, GoogleConfig, GitLabConfig, GiteeConfig
 from django.contrib.auth.models import Group
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework import viewsets
@@ -327,6 +327,25 @@ class GitLabConfigViewSet(viewsets.ModelViewSet):
     def current(self):
         """获取当前启用的配置"""
         config = GitLabConfig.objects.filter(enabled=True).first()
+        if config:
+            serializer = self.get_serializer(config)
+            return Response(serializer.data)
+        return Response(None)
+
+class GiteeConfigViewSet(viewsets.ModelViewSet):
+    queryset = GiteeConfig.objects.all()
+    serializer_class = GiteeConfigSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        if not self.request.user.role in ['admin', 'superuser']:
+            raise PermissionDenied("只有管理员可以管理配置")
+        return super().get_queryset()
+
+    @action(detail=False, methods=['get'])
+    def current(self):
+        """获取当前启用的配置"""
+        config = GiteeConfig.objects.filter(enabled=True).first()
         if config:
             serializer = self.get_serializer(config)
             return Response(serializer.data)
