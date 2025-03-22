@@ -194,7 +194,7 @@
         </div>
         
         <el-table :data="githubConfigs" v-loading="loading.github">
-          <el-table-column prop="client_id" label="Client ID" width="300" />
+          <el-table-column prop="client_id" label="Client ID"/>
           <el-table-column prop="client_secret" label="Client Secret" show-overflow-tooltip />
           <el-table-column prop="redirect_uri" label="回调域名" show-overflow-tooltip>
             <template #default="{ row }">
@@ -251,7 +251,7 @@
         </div>
         
         <el-table :data="googleConfigs" v-loading="loading.google">
-          <el-table-column prop="client_id" label="Client ID" width="300" />
+          <el-table-column prop="client_id" label="Client ID"/>
           <el-table-column prop="client_secret" label="Client Secret" show-overflow-tooltip />
           <el-table-column prop="redirect_uri" label="回调域名" show-overflow-tooltip>
             <template #default="{ row }">
@@ -309,7 +309,7 @@
         </div>
         
         <el-table :data="gitlabConfigs" v-loading="loading.gitlab">
-          <el-table-column prop="client_id" label="Client ID" width="300" />
+          <el-table-column prop="client_id" label="Client ID"/>
           <el-table-column prop="client_secret" label="Client Secret" show-overflow-tooltip />
           <el-table-column prop="redirect_uri" label="回调域名" show-overflow-tooltip>
             <template #default="{ row }">
@@ -345,6 +345,63 @@
           </el-table-column>
         </el-table>
       </el-tab-pane>
+
+      <!-- Gitee配置 -->
+      <el-tab-pane label="Gitee配置" name="gitee">
+        <div class="config-tips">
+          <p>配置说明：</p>
+          <p>1. 请先前往 <el-link href="https://gitee.com/oauth/applications" type="primary" target="_blank">Gitee应用管理</el-link> 获取相关配置</p>
+          <p>2. 回调域名请填写：{{ baseUrl }}/oauth/callback</p>
+          <p>3. 权限范围请选择：user_info, emails</p>
+        </div>
+
+        <div class="tab-header">
+          <el-button 
+            type="primary" 
+            @click="handleAdd('gitee')"
+            :disabled="giteeConfigs.length >= 1"
+          >
+            <el-icon><Plus /></el-icon>新建配置
+          </el-button>
+        </div>
+        
+        <el-table :data="giteeConfigs" v-loading="loading.gitee">
+          <el-table-column prop="client_id" label="Client ID"/>
+          <el-table-column prop="client_secret" label="Client Secret" show-overflow-tooltip />
+          <el-table-column prop="redirect_uri" label="回调域名" show-overflow-tooltip>
+            <template #default="{ row }">
+              <el-link 
+                type="primary" 
+                :href="row.redirect_uri" 
+                target="_blank"
+                :underline="false"
+              >
+                {{ row.redirect_uri }}
+              </el-link>
+            </template>
+          </el-table-column>
+          <el-table-column prop="enabled" label="状态" width="100">
+            <template #default="{ row }">
+              <el-switch
+                v-model="row.enabled"
+                @change="handleStatusChange('gitee', row)"
+              />
+            </template>
+          </el-table-column>
+          <el-table-column label="操作" width="200" fixed="right">
+            <template #default="{ row }">
+              <el-button-group>
+                <el-button type="primary" :icon="Edit" @click="handleEdit('gitee', row)">
+                  编辑
+                </el-button>
+                <el-button type="danger" :icon="Delete" @click="handleDelete('gitee', row)">
+                  删除
+                </el-button>
+              </el-button-group>
+            </template>
+          </el-table-column>
+        </el-table>
+      </el-tab-pane>
     </el-tabs>
 
     <!-- 配置表单对话框 -->
@@ -373,7 +430,6 @@
             <el-input 
               v-model="form.redirect_uri" 
               placeholder="留空将自动使用当前域名"
-              @blur="handleRedirectUriBlur"
             />
           </el-form-item>
         </template>
@@ -389,7 +445,6 @@
             <el-input 
               v-model="form.redirect_uri" 
               placeholder="留空将自动使用当前域名"
-              @blur="handleRedirectUriBlur"
             />
           </el-form-item>
         </template>
@@ -408,7 +463,6 @@
             <el-input 
               v-model="form.redirect_uri" 
               placeholder="留空将自动使用当前域名"
-              @blur="handleRedirectUriBlur"
             />
           </el-form-item>
         </template>
@@ -424,7 +478,6 @@
             <el-input 
               v-model="form.redirect_uri" 
               placeholder="留空将自动使用当前域名"
-              @blur="handleRedirectUriBlur"
             />
           </el-form-item>
         </template>
@@ -440,7 +493,6 @@
             <el-input 
               v-model="form.redirect_uri" 
               placeholder="留空将自动使用当前域名"
-              @blur="handleRedirectUriBlur"
             />
           </el-form-item>
         </template>
@@ -462,7 +514,21 @@
             <el-input 
               v-model="form.redirect_uri" 
               placeholder="留空将自动使用当前域名"
-              @blur="handleRedirectUriBlur"
+            />
+          </el-form-item>
+        </template>
+
+        <template v-if="activeTab === 'gitee'">
+          <el-form-item label="Client ID" prop="client_id">
+            <el-input v-model="form.client_id" />
+          </el-form-item>
+          <el-form-item label="Client Secret" prop="client_secret">
+            <el-input v-model="form.client_secret" type="password" show-password />
+          </el-form-item>
+          <el-form-item label="回调域名" prop="redirect_uri">
+            <el-input 
+              v-model="form.redirect_uri" 
+              placeholder="留空将自动使用当前域名"
             />
           </el-form-item>
         </template>
@@ -487,7 +553,7 @@ import { Plus, Edit, Delete } from '@element-plus/icons-vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import type { FormInstance } from 'element-plus'
 import { configApi } from '@/api/config'
-import type { WeComConfig, FeiShuConfig, DingTalkConfig, GitHubConfig, GoogleConfig, GitLabConfig } from '@/api/config'
+import type { WeComConfig, FeiShuConfig, DingTalkConfig, GitHubConfig, GoogleConfig, GitLabConfig, GiteeConfig } from '@/api/config'
 import { useRouter } from 'vue-router'
 import { useUserStore } from '@/store/user'
 
@@ -512,6 +578,7 @@ const dingtalkConfigs = ref<DingTalkConfig[]>([])
 const githubConfigs = ref<GitHubConfig[]>([])
 const googleConfigs = ref<GoogleConfig[]>([])
 const gitlabConfigs = ref<GitLabConfig[]>([])
+const giteeConfigs = ref<GiteeConfig[]>([])
 
 const loading = ref({
   wecom: false,
@@ -519,7 +586,8 @@ const loading = ref({
   dingtalk: false,
   github: false,
   google: false,
-  gitlab: false
+  gitlab: false,
+  gitee: false
 } as const)
 
 const form = ref<any>({
@@ -544,7 +612,8 @@ const formTitle = computed(() => {
     dingtalk: '钉钉',
     github: 'GitHub',
     google: 'Google',
-    gitlab: 'GitLab'
+    gitlab: 'GitLab',
+    gitee: 'Gitee'
   }[activeTab.value]
   return `${action}${type}配置`
 })
@@ -593,6 +662,11 @@ const fetchConfigs = async () => {
       case 'gitlab': {
         const gitlabRes = await configApi.getGitLabConfigs()
         gitlabConfigs.value = gitlabRes.data
+        break
+      }
+      case 'gitee': {
+        const giteeRes = await configApi.getGiteeConfigs()
+        giteeConfigs.value = giteeRes.data
         break
       }
     }
@@ -667,6 +741,9 @@ const handleDelete = async (type: string, row: any) => {
       case 'gitlab':
         await configApi.deleteGitLabConfig(row.id)
         break
+      case 'gitee':
+        await configApi.deleteGiteeConfig(row.id)
+        break
     }
 
     ElMessage.success('删除成功')
@@ -702,6 +779,9 @@ const handleStatusChange = async (type: string, row: any) => {
       case 'gitlab':
         await configApi.updateGitLabConfig(row.id, data)
         break
+      case 'gitee':
+        await configApi.updateGiteeConfig(row.id, data)
+        break
     }
     ElMessage.success('更新状态成功')
   } catch (error) {
@@ -720,6 +800,12 @@ const handleSubmit = async () => {
       submitting.value = true
       try {
         const data = { ...form.value }
+        
+        // 如果回调域名为空，自动填充当前域名
+        if (!data.redirect_uri) {
+          data.redirect_uri = `${baseUrl.value}/oauth/callback`
+        }
+        
         if (currentConfig.value) {
           // 更新
           switch (activeTab.value) {
@@ -740,6 +826,9 @@ const handleSubmit = async () => {
               break
             case 'gitlab':
               await configApi.updateGitLabConfig(currentConfig.value.id, data)
+              break
+            case 'gitee':
+              await configApi.updateGiteeConfig(currentConfig.value.id, data)
               break
           }
           ElMessage.success('更新成功')
@@ -763,6 +852,9 @@ const handleSubmit = async () => {
               break
             case 'gitlab':
               await configApi.createGitLabConfig(data)
+              break
+            case 'gitee':
+              await configApi.createGiteeConfig(data)
               break
           }
           ElMessage.success('创建成功')
@@ -793,13 +885,6 @@ onMounted(() => {
 const baseUrl = computed(() => {
   return window.location.origin
 })
-
-// 处理回调域名失焦事件
-const handleRedirectUriBlur = () => {
-  if (!form.value.redirect_uri) {
-    form.value.redirect_uri = `${baseUrl.value}/oauth/callback`
-  }
-}
 </script>
 
 <style scoped>

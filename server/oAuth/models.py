@@ -324,7 +324,7 @@ class GoogleUser(models.Model):
         null=True, blank=True
     )
     google_id = models.CharField('Google ID', max_length=100, unique=True)
-    email = models.EmailField('邮箱', max_length=100)
+    email = models.EmailField('邮箱', max_length=100, null=True, blank=True)
     name = models.CharField('姓名', max_length=100, null=True, blank=True)
     given_name = models.CharField('名', max_length=100, null=True, blank=True)
     family_name = models.CharField('姓', max_length=100, null=True, blank=True)
@@ -386,3 +386,43 @@ class GitLabUser(models.Model):
 
     def __str__(self):
         return f'GitLab用户 - {self.name or self.username}'
+
+
+class GiteeConfig(models.Model):
+    """Gitee 配置"""
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    client_id = models.CharField(max_length=255, verbose_name='Client ID')
+    client_secret = models.CharField(max_length=255, verbose_name='Client Secret')
+    redirect_uri = models.CharField(max_length=255, verbose_name='重定向URI', blank=True)
+    enabled = models.BooleanField(default=True, verbose_name='是否启用')
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name='创建时间')
+    updated_at = models.DateTimeField(auto_now=True, verbose_name='更新时间')
+
+    class Meta:
+        verbose_name = 'Gitee 配置'
+        verbose_name_plural = verbose_name
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return f'Gitee 配置 {self.id}'
+
+
+class GiteeUser(models.Model):
+    """Gitee 用户"""
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True, related_name='gitee_user')
+    gitee_id = models.CharField(max_length=50, unique=True, verbose_name='Gitee ID')
+    name = models.CharField(max_length=100, blank=True, verbose_name='姓名')
+    username = models.CharField(max_length=100, blank=True, verbose_name='用户名')
+    email = models.EmailField(null=True, blank=True, verbose_name='邮箱')
+    avatar_url = models.URLField(blank=True, verbose_name='头像')
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name='创建时间')
+    updated_at = models.DateTimeField(auto_now=True, verbose_name='更新时间')
+
+    class Meta:
+        verbose_name = 'Gitee 用户'
+        verbose_name_plural = verbose_name
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return f'Gitee 用户 {self.gitee_id} - {self.name}'

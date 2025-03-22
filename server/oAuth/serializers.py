@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from django.contrib.auth.models import Group
-from .models import User, NoteGroup, WeComConfig, FeiShuConfig, DingTalkConfig, GitHubConfig, GitHubUser, OAuthConfig, GoogleConfig, GoogleUser, GitLabConfig, GitLabUser
+from .models import User, NoteGroup, WeComConfig, FeiShuConfig, DingTalkConfig, GitHubConfig, GitHubUser, OAuthConfig, GoogleConfig, GoogleUser, GitLabConfig, GitLabUser, GiteeConfig, GiteeUser
 from django.contrib.auth.hashers import make_password
 
 class UserSerializer(serializers.ModelSerializer):
@@ -101,4 +101,14 @@ class GitLabConfigSerializer(serializers.ModelSerializer):
 class GitLabUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = GitLabUser
+        fields = '__all__'
+
+class GiteeConfigSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = GiteeConfig
+        fields = '__all__'
+
+class GiteeUserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = GiteeUser
         fields = '__all__'
