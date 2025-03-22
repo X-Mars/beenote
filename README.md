@@ -80,11 +80,11 @@ docker compose up
 
 ## 截图展示
 
-![登录页](https://github.com/X-Mars/beenote/blob/master/images/1.png?raw=true)
-![仪表盘](https://github.com/X-Mars/beenote/blob/master/images/2.png?raw=true)
-![笔记管理](https://github.com/X-Mars/beenote/blob/master/images/3.png?raw=true)
-![笔记授权](https://github.com/X-Mars/beenote/blob/master/images/4.png?raw=true)
-![三方登录](https://github.com/X-Mars/beenote/blob/master/images/5.png?raw=true)
+![登录页](https://raw.githubusercontent.com/X-Mars/beenote/refs/heads/master/images/1.png)
+![仪表盘](https://raw.githubusercontent.com/X-Mars/beenote/refs/heads/master/images/2.png)
+![笔记管理](https://raw.githubusercontent.com/X-Mars/beenote/refs/heads/master/images/3.png)
+![笔记授权](https://raw.githubusercontent.com/X-Mars/beenote/refs/heads/master/images/4.png)
+![三方登录](https://raw.githubusercontent.com/X-Mars/beenote/refs/heads/master/images/5.png)
 
 ## 开发环境
 
