@@ -91,8 +91,8 @@ docker compose up
 ```shell
 python 3.12
 sqlite 3
-django 5.1.4
-node v22.12.0
+django 5.1.7
+node v22.14.0
 ```
 
 ## 部署安装

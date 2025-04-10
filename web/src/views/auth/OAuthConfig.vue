@@ -294,7 +294,7 @@
           <p>配置说明：</p>
           <p>1. 请先前往 GitLab 实例的应用设置页面获取相关配置（对于公共 GitLab，地址为：<el-link href="https://gitlab.com/-/profile/applications" type="primary" target="_blank">GitLab 应用设置</el-link>）</p>
           <p>2. 回调域名请填写：{{ baseUrl }}/oauth/callback</p>
-          <p>3. 权限范围请选择：read_user</p>
+          <p>3. 权限范围请选择：api, read_user, profile, email</p>
           <p>4. 对于私有化部署的 GitLab，请填写完整的 GitLab 服务器地址（例如：https://gitlab.example.com）</p>
         </div>
 
